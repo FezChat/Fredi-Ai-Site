@@ -17,9 +17,6 @@ lang.onchange = () => {
 };
 
 // SPLASH SCREEN
-setTimeout(() => {
-  document.getElementById("splash").style.display = "none";
-}, 15000);
 
 // CART SYSTEM
 const cart = [];
