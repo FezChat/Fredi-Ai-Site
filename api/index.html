@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREDI API | Comprehensive API Documentation</title>
+    <meta name="description" content="Modern interface for accessing powerful API endpoints">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+           /* Light Theme */
+  --primary-light: #4e9af1;
+  --secondary-light: #7f5af0;
+  --accent-light: #f81ce5;
+  --background-light: #fdfdfd;
+  --surface-light: #ffffff;
+  --text-light: #1f1f1f;
+  --text-secondary-light: #6c757d;
+  --border-light: #e0e0e0;
+  --success-light: #2ecc71;
+  --danger-light: #ff4d4f;
+  --warning-light: #ffb020;
+  --info-light: #3db2ff;
+  --highlight-light: #ffe066;
+  --muted-light: #f1f3f5;
+  --overlay-light: rgba(0, 0, 0, 0.05);
+
+  /* Dark Theme */
+  --primary-dark: #5ac8fa;
+  --secondary-dark: #9b59b6;
+  --accent-dark: #ff6ec7;
+  --background-dark: #121212;
+  --surface-dark: #1e1e1e;
+  --text-dark: #ffffff;
+  --text-secondary-dark: #b0b0b0;
+  --border-dark: #2c2c2c;
+  --success-dark: #27ae60;
+  --danger-dark: #ff3b30;
+  --warning-dark: #ffa801;
+  --info-dark: #00a8ff;
+  --highlight-dark: #fbc531;
+  --muted-dark: #2f3542;
+  --overlay-dark: rgba(255, 255, 255, 0.05);
+
+  /* Default to Dark Theme */
+  --primary: var(--primary-dark);
+  --secondary: var(--secondary-dark);
+  --accent: var(--accent-dark);
+  --background: var(--background-dark);
+  --surface: var(--surface-dark);
+--text: var(--text-dark);
+  --text-secondary: var(--text-secondary-dark);
+  --border: var(--border-dark);
+  --success: var(--success-dark);
+  --danger: var(--danger-dark);
+  --warning: var(--warning-dark);
+  --info: var(--info-dark);
+  --highlight: var(--highlight-dark);
+  --muted: var(--muted-dark);
+  --overlay: var(--overlay-dark);
+}
+
+[data-theme="light"] {
+  --primary: var(--primary-light);
+  --secondary: var(--secondary-light);
+  --accent: var(--accent-light);
+  --background: var(--background-light);
+  --surface: var(--surface-light);
+  --text: var(--text-light);
+  --text-secondary: var(--text-secondary-light);
+  --border: var(--border-light);
+  --success: var(--success-light);
+  --danger: var(--danger-light);
+  --warning: var(--warning-light);
+  --info: var(--info-light);
+  --highlight: var(--highlight-light);
+  --muted: var(--muted-light);
+  --overlay: var(--overlay-light);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            font-weight: 400;
+            letter-spacing: -0.015em;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .theme-toggle-container {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            width: 3.5rem;
+            height: 1.75rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 0 0.25rem;
+        }
+
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background: var(--primary);
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="light"] .theme-toggle::after {
+            transform: translateX(1.75rem);
+        }
+
+        .theme-icon {
+            font-size: 0.9rem;
+            color: var(--text);
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: var(--surface);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item i {
+            color: var(--primary);
+        }
+
+        /* Main Content Styles */
+        .category {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 3rem 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .category i {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .category-count {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0 3rem;
+            background: var(--surface);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        th, td {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--surface);
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(67, 97, 238, 0.03);
+        }
+
+        .endpoint-name {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .endpoint-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .try-btn {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .try-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .try-btn i {
+            font-size: 0.8rem;
+        }
+
+        .status {
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status.testing {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .status.active {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+
+        .status.inactive {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .blinking-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+                margin-top: 1.5rem;
+            }
+            
+            .theme-toggle-container {
+                position: static;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+            }
+            
+            th, td {
+                padding: 1rem;
+            }
+            
+            .category {
+                font-size: 1.2rem;
+                margin: 2rem 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            
+            .stat-item {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        table tbody tr {
+            animation: fadeIn 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+        table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+        table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+        table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+        table tbody tr:nth-child(6) { animation-delay: 0.6s; }
+        table tbody tr:nth-child(7) { animation-delay: 0.7s; }
+        table tbody tr:nth-child(8) { animation-delay: 0.8s; }
+        table tbody tr:nth-child(9) { animation-delay: 0.9s; }
+        table tbody tr:nth-child(10) { animation-delay: 1.0s; }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <header>
+            <div class="theme-toggle-container">
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon theme-icon"></i>
+                    <i class="fas fa-sun theme-icon"></i>
+                </div>
+            </div>
+            
+          <div class="header-content">
+            <h1>FREDI APIs</h1>
+      <p class="subtitle">
+    Modern, powerful API endpoints for developers.<br><br>
+    Build amazing applications with our comprehensive suite of tools and services — 
+    including <strong>AI chatbots</strong>, <strong>authentication</strong>, <strong>VPN integrations</strong>, 
+    <strong>code execution</strong>, <strong>file handling</strong>, and <strong>real-time data</strong>. 
+    Whether you're working on mobile apps, web services, or automation tools, our APIs are designed 
+    to be <em>fast</em>, <em>scalable</em>, and <em>developer-friendly</em>.<br><br>
+
+    ✅ Secure & Fast<br>
+    ✅ Easy Integration<br>
+    ✅ Free & Premium Plans<br>
+    ✅ Built for Innovation<br><br>
+
+    <strong>Start building smarter today!</strong>
+  </p>
+</div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <i class="fas fa-plug"></i>
+                        <span id="total-endpoints">0</span> Endpoints
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="active-endpoints">0</span> Active
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-tools"></i>
+                        <span id="categories-count">0</span> Categories
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Downloaders Section -->
+            <div class="category">
+                <span><i class="fas fa-download"></i> Downloaders</span>
+                <span class="category-count" id="downloaders-count">0 endpoints</span>
+            </div>
+            <table id="downloaders">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- AI Section -->
+            <div class="category">
+                <span><i class="fas fa-robot"></i> AI</span>
+                <span class="category-count" id="ai-count">0 endpoints</span>
+            </div>
+            <table id="ai">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Search Section -->
+            <div class="category">
+                <span><i class="fas fa-search"></i> Search</span>
+                <span class="category-count" id="search-count">0 endpoints</span>
+            </div>
+            <table id="search">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Movie Section -->
+            <div class="category">
+                <span><i class="fas fa-film"></i> Movie</span>
+                <span class="category-count" id="movie-count">0 endpoints</span>
+            </div>
+            <table id="movie">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Tools Section -->
+            <div class="category">
+                <span><i class="fas fa-tools"></i> Tools</span>
+                <span class="category-count" id="tools-count">0 endpoints</span>
+            </div>
+            <table id="tools">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Images Section -->
+            <div class="category">
+                <span><i class="fas fa-image"></i> Images</span>
+                <span class="category-count" id="images-count">0 endpoints</span>
+            </div>
+            <table id="images">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Education Section -->
+            <div class="category">
+                <span><i class="fas fa-graduation-cap"></i> Education</span>
+                <span class="category-count" id="education-count">0 endpoints</span>
+            </div>
+            <table id="education">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Gameballs Section -->
+            <div class="category">
+                <span><i class="fas fa-futbol"></i> Gameballs</span>
+                <span class="category-count" id="gameballs-count">0 endpoints</span>
+            </div>
+            <table id="gameballs">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Stalkers Section -->
+            <div class="category">
+                <span><i class="fas fa-user-secret"></i> Stalkers</span>
+                <span class="category-count" id="stalkers-count">0 endpoints</span>
+            </div>
+            <table id="stalkers">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Fun Section -->
+            <div class="category">
+                <span><i class="fas fa-laugh"></i> Fun</span>
+                <span class="category-count" id="fun-count">0 endpoints</span>
+            </div>
+            <table id="fun">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Random Section -->
+            <div class="category">
+                <span><i class="fas fa-random"></i> Random</span>
+                <span class="category-count" id="random-count">0 endpoints</span>
+            </div>
+            <table id="random">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Anime Section -->
+            <div class="category">
+                <span><i class="fas fa-dragon"></i> Anime</span>
+                <span class="category-count" id="anime-count">0 endpoints</span>
+            </div>
+            <table id="anime">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Shortener Section -->
+            <div class="category">
+                <span><i class="fas fa-link"></i> Shortener</span>
+                <span class="category-count" id="shortener-count">0 endpoints</span>
+            </div>
+            <table id="shortener">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Games Section -->
+            <div class="category">
+                <span><i class="fas fa-gamepad"></i> Games</span>
+                <span class="category-count" id="games-count">0 endpoints</span>
+            </div>
+            <table id="games">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Keith Section -->
+            <div class="category">
+                <span><i class="fas fa-user"></i> Keith</span>
+                <span class="category-count" id="keith-count">0 endpoints</span>
+            </div>
+            <table id="keith">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Feature Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </main>
+
+<footer>
+  <p>© 2025 FREDI APIs — All endpoints provided as-is without warranty.</p>
+  <div style="margin-top: 0.5rem;">
+    <a href="/terms" style="color: var(--info); margin: 0 8px;">Terms</a> |
+    <a href="/privacy" style="color: var(--info); margin: 0 8px;">Privacy</a> |
+    <a href="mailto:support@fredi.com" style="color: var(--info); margin: 0 8px;">Contact</a>
+  </div>
+</footer>
+    </div>
+
+    <script>
+        // Configuration
+        const TIMEOUT_DURATION = 5000; // 5 seconds timeout
+
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const totalEndpointsElement = document.getElementById('total-endpoints');
+        const activeEndpointsElement = document.getElementById('active-endpoints');
+        const categoriesCountElement = document.getElementById('categories-count');
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('keith_api_theme', newTheme);
+        }
+
+        // Initialize theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('keith_api_theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+
+        // API Endpoints Data
+        const endpoints = [
+            // Downloaders
+                        { category: "downloaders", name: "YouTube MP3", url: "/download/dlmp3?url=https://youtube.com/watch?v=qHDJSRlNhVs", description: "Download YouTube videos as MP3 files." },
+            { category: "downloaders", name: "YouTube MP4", url: "/download/dlmp4?url=https://youtube.com/watch?v=qHDJSRlNhVs", description: "Download YouTube videos as MP4 files." },
+            { category: "downloaders", name: "YouTube ytmp3", url: "/download/ytmp3?url=https://youtube.com/watch?v=qHDJSRlNhVs", description: "Download YouTube videos as MP3 files." },
+            { category: "downloaders", name: "YouTube ytmp4", url: "/download/ytmp4?url=https://youtube.com/watch?v=qHDJSRlNhVs", description: "Download YouTube videos as MP4 files." },
+            { category: "downloaders", name: "Pastebin download", url: "/download/pastebin?url=https://pastebin.com/nadATeEJ", description: "Fetches pastebin code." },
+   
+            { category: "downloaders", name: "YouTube audio dl", url: "/download/audio?url=https://youtube.com/watch?v=qHDJSRlNhVs", description: "Download YouTube videos as MP3 files." },
+            { category: "downloaders", name: "YouTube video dl", url: "/download/video?url=https://youtube.com/watch?v=qHDJSRlNhVs", description: "Download YouTube videos as MP4 files." },
+            { category: "downloaders", name: "Pinterest download", url: "/download/pinterest?url=https://pin.it/5XTxGNqwe", description: "Download Pinterest images or videos ." },
+            { category: "downloaders", name: "bilibili/twitter/fb download", url: "/download/twitfbbil?url=https://www.bilibili.com/video/BV1cy4y1k7A2/", description: "Download bilibili/twitter/fb ." },
+            { category: "downloaders", name: "rednote download", url: "/download/rednote?url=https://xhslink.com/a/OAzIdalFCoYcb", description: "Download Pinterest images or videos ." },
+            { category: "downloaders", name: "terabox download", url: "/download/terabox?url=https://terabox.com/s/1FtdPSfXTu6BRMzDSe1PMEg", description: "Download terabox videos ." },
+            { category: "downloaders", name: "Social media download(alldl)", url: "/download/alldl?url=https://pin.it/5XTxGNqwe", description: "Download Pinterest images or videos ." },
+            
+            { category: "downloaders", name: "xvideo Download", url: "/download/porn?url=https://www.xvideos.com/video.hppakie6a79/mia_khalifa_fucks_a_fanboy", description: "Download Xvideos  " }, 
+            { category: "downloaders", name: "Piniimg Download", url: "/download/piniimg?text=car", description: "Download images from Piniimg." },
+            { category: "downloaders", name: "Twitter Download", url: "/download/twitter?url=https://twitter.com/futurism/status/882987478541533189", description: "Download videos from Twitter." },
+            { category: "downloaders", name: "Spotify", url: "/download/spotify?q=spectre", description: "download spotify audio tracks." },
+            { category: "downloaders", name: "Spotify download 2", url: "/download/spotifydl?url=https://open.spotify.com/track/6IlORXzatD3Y3p1JN386ho", description: "download spotify audio from Spotify url." },
+            { category: "downloaders", name: "TikTok Download", url: "/download/tiktokdl?url=https://vt.tiktok.com/ZSje1Vkup/", description: "Download videos from TikTok." }, 
+
+            { category: "downloaders", name: "TikTok Download 2", url: "/download/tiktokdl2?url=https://vt.tiktok.com/ZSje1Vkup/", description: "Download videos from TikTok." }, 
+            { category: "downloaders", name: "Instagram Download", url: "/download/instagramdl?url=https://www.instagram.com/reel/DD6q97IuzxD/?igsh=YzljYTk1ODg3Zg==", description: "Download videos from Instagram." },
+            { category: "downloaders", name: "Instagram Download 2", url: "/download/instadl?url=https://www.instagram.com/reel/DD6q97IuzxD/?igsh=YzljYTk1ODg3Zg==", description: "Download videos from Instagram." },
+            { category: "downloaders", name: "Instagram Download 3", url: "/download/instadl3?url=https://www.instagram.com/reel/DD6q97IuzxD/?igsh=YzljYTk1ODg3Zg==", description: "Download videos from Instagram." },
+            
+            { category: "downloaders", name: "MediaFire Download", url: "/download/mfire?url=https://www.mediafire.com/file/yce2h1da3kqzh27/WhatsApp+Installer.exe/file", description: "Download files from MediaFire." },
+            { category: "downloaders", name: "APKFab Download", url: "/download/apkfab?url=https://apkfab.com/whatsapp-messenger/com.whatsapp", description: "Download APK files from APKFab." },
+            { category: "downloaders", name: "Mod WhatsApp Download", url: "/download/modwhatsappdl?url=https://apkdon.net/fouad-whatsapp/", description: "Download modified WhatsApp APK." },
+            { category: "downloaders", name: "Mod WA Download", url: "/download/modwadl?url=https://apkdon.net/fouad-whatsapp-download-latest-version/", description: "Download modified WhatsApp APK." },
+            { category: "downloaders", name: "Facebook Download", url: "/download/fbdown?url=https://www.facebook.com/share/r/19zyz6X8KJ/", description: "Download videos from Facebook." },
+
+            { category: "downloaders", name: "Facebook Download 2", url: "/download/fbdl?url=https://www.facebook.com/share/r/19zyz6X8KJ/", description: "Download videos from Facebook." },
+
+            { category: "downloaders", name: "SoundCloud Download", url: "/download/soundcloud?url=https://m.soundcloud.com/nilanhettiarachchi/lelena", description: "Download audio from SoundCloud." },
+            { category: "downloaders", name: "Appletone Download", url: "/download/appletone?text=2024", description: "Download ringtones from Appletone." },
+            { category: "downloaders", name: "Appletone DL", url: "/download/appletonedl?url=https://www.prokerala.com/downloads/ringtones/download.php?id=62159", description: "Download ringtones from Appletone." },
+            { category: "downloaders", name: "Telegram stories", url: "/download/tgstories?q=Shakeena6", description: "Get telegram user's stories." },     
+            { category: "downloaders", name: "Hentai video", url: "/dl/hentaivid", description: "Get a random hentaivideo." },
+            
+            // Images
+                       { category: "images", name: "Logo", url: "/logo", description: "Generate logos." },
+            { category: "images", name: "Wallpaper Download", url: "/download/wallpaper?text=car&page=1", description: "Download wallpapers." },
+            { category: "images", name: "bing", url: "/ai/bing?q=dog", description: "download ai image." },
+            { category: "images", name: "anime imagine", url: "/ai/animaginexl?q=dog", description: "download ai image." },
+            { category: "images", name: "anime mix", url: "/ai/animemix?q=dog", description: "download ai image." },
+            { category: "images", name: "blazing drive", url: "/ai/blazingdrive?q=dog", description: "download ai image." },
+            { category: "images", name: "braindance", url: "/ai/braindance?q=dog", description: "download ai image." },
+            { category: "images", name: "cogview", url: "/ai/cogview?q=dog", description: "download ai image." },
+            { category: "images", name: "cyberxl", url: "/ai/cyberxl?q=dog", description: "download ai image." },
+            { category: "images", name: "dalle", url: "/ai/dalle?q=dog", description: "download ai image." },
+            { category: "images", name: "dalle2", url: "/ai/dalle2?q=dog", description: "download ai image." },
+            { category: "images", name: "dreamshaper", url: "/ai/dreamshaper?q=dog", description: "download ai image." },
+            { category: "images", name: "flux", url: "/ai/flux?q=dog", description: "download ai image." },
+            { category: "images", name: "flux pro ultra", url: "/ai/fluxproultra?q=dog", description: "download ai image." },
+            { category: "images", name: "WallpapersCraft Search", url: "/search/wallpaperscraft?q=car", description: "Search for wallpapers on WallpapersCraft." },
+
+
+            // AI
+            { category: "ai", name: "GPT", url: "/ai/gpt?q=which%20model%20are%20you", description: "Access the GPT AI model." },
+            { category: "ai", name: "Claude Ai", url: "/ai/claudeai?q=which%20model%20are%20you", description: "Access claude Ai model" },
+            { category: "ai", name: "Mistral Ai", url: "/ai/mistral?q=which%20model%20are%20you", description: "Access Mistral Ai model" },
+            { category: "ai", name: "gpt4 Nano", url: "/ai/gpt41Nano?q=which%20model%20are%20you", description: "Access gpt4 Nano Ai model" },
+            { category: "ai", name: "o3 Ai", url: "/ai/o3?q=which%20model%20are%20you", description: "Access o3 Ai model" },
+            
+            { category: "ai", name: "ChatGPT4", url: "/ai/chatgpt4?q=which%20model%20are%20you", description: "Access the GPT AI model." },
+           { category: "ai", name: "venice ai", url: "/ai/venice?q=which%20model%20are%20you", description: "Access the VENICE AI model." },
+            { category: "ai", name: "Code Generator", url: "/ai/codegen?q=generate%20a%20rest%20api%20code", description: "Access all language codes using code generator." },
+            { category: "ai", name: "Deepseek V3", url: "/ai/deepseekV3?q=which%20model%20are%20you", description: "Access the Deepseek AI model." },
+            { category: "ai", name: "Lyrics Generator", url: "/ai/lyricsgen?topic=Heartbreak&genre=blues&mood=sad&structure=verse_chorus_bridge&language=en", description: "to generate lyrics line contact keith for the supported genres, mood, language and structure" },
+            
+            { category: "ai", name: "gpt4", url: "/ai/gpt4?q=which%20model%20are%20you", description: "Access the gpt4 AI model." },
+            { category: "ai", name: "Qwena ai", url: "/ai/qwenai?q=which%20model%20are%20you", description: "Access the qwena AI model." },
+            { category: "ai", name: "Gemini-1.5-Flash vision", url: "/ai/gemini-vision2?image=https://i.imgur.com/t5fTpbk.jpeg&q=What's%20in%20this%20image", description: "Access the Gemini AI vision model." },
+            { category: "ai", name: "Gemini-vision", url: "/ai/gemini-vision?image=https://i.imgur.com/t5fTpbk.jpeg&q=What's%20in%20this%20image", description: "Access the Gemini AI vision model." },
+            { category: "ai", name: "Meta AI", url: "/ai/metai?q=which%20model%20are%20you", description: "Access the Meta AI model." },
+            { category: "ai", name: "Deeepseek R1", url: "/ai/deepseek?q=which%20model%20are%20you", description: "Access the Deepseek AI model." },
+            { category: "ai", name: "Blackbox", url: "/ai/blackbox?q=which%20model%20are%20you", description: "Access the Blackbox AI model." },
+            { category: "ai", name: "Ilama", url: "/ai/ilama?q=which%20model%20are%20you", description: "Access the Ilama AI model." },
+            { category: "ai", name: "gemini", url: "/ai/gemini?q=which%20model%20are%20you", description: "Access the Gemini AI model." }, 
+            { category: "ai", name: "Grok ai", url: "/ai/grok?q=which%20model%20are%20you", description: "Access the grok ai ." }, 
+            { category: "ai", name: "Bard AI", url: "/ai/bard?q=which%20model%20are%20you", description: "Access the Bard AI model." },
+
+
+            // Search
+                       { category: "search", name: "YouTube Search", url: "/search/yts?query=spectre", description: "Search for videos on YouTube." },
+            { category: "search", name: "images Search", url: "/search/images?query=dog", description: "Search for google images" },
+            { category: "search", name: "Bing Search", url: "/search/bing?query=Cat", description: "Search for bing ." },
+            { category: "search", name: "TikTok Trend search", url: "/download/tiktoktrend?region=KE", description: "Search trending tiktoks in your region." },
+            { category: "search", name: "Lyrics Search", url: "/search/lyrics?query=faded", description: "Search for song lyrics." },
+            { category: "search", name: "Lyrics2 Search", url: "/search/lyrics2?query=faded", description: "Search for song lyrics." },
+            { category: "search", name: "Chord Search", url: "/ai/chord?query=faded", description: "Search for song lyrics from chord" },
+             
+            { category: "search", name: "TikTok Search", url: "/search/tiktoksearch?query=keizzah4189", description: "provide a username to search in TikTok ." },
+            { category: "search", name: "Search Instagram user", url: "/search/instauser?user=keith_keizzah", description: "provide an Instagram username." },
+            { category: "search", name: "SoundCloud Search", url: "/search/soundcloud?q=lelena", description: "Search for audio on SoundCloud." },
+            { category: "search", name: "Tweets Search", url: "/search/searchtweets?q=keithkeizzah", description: "Search for x tweets." },
+            { category: "search", name: "Tweets post", url: "/search/tweet-posts?q=keithkeizzah", description: "Search for x tweets posts." },
+            { category: "search", name: "xvideo Search", url: "/search/searchxvideos?q=dick", description: "Search for Xvideos." },
+            { category: "search", name: "TikTok user posts Search", url: "/search/tiktokuserposts?user=keizzah4189", description: "Search for users posts in tiktok." },
+            { category: "search", name: "Spotify Search", url: "/search/spotify?q=lelena", description: "Search for music on Spotify." },
+            
+            { category: "search", name: "APKFab Search", url: "/search/apkfab?q=whatsapp", description: "Search for APKs on APKFab." },
+            { category: "search", name: "Sticker Search", url: "/search/sticker?q=cat", description: "Search for stickers." },
+            { category: "search", name: "Mod WhatsApp Search", url: "/search/modwhatsapp?q=gbwhatsapp", description: "Search for modified WhatsApp APKs." },
+            { category: "search", name: "HappyMod Search", url: "/search/happymodSearch?q=car", description: "Search for apps on HappyMod." },
+
+            // Movie
+                        { category: "movie", name: "Sinhalasub Search", url: "/movie/sinhalasub/search?text=Vikings", description: "Search for movies on Sinhalasub." },
+            { category: "movie", name: "Sinhalasub Movie", url: "/movie/sinhalasub/movie?url=https://sinhalasub.lk/movies/outbreak-2024-sinhala-subtitles/", description: "Get movie details from Sinhalasub." },
+            { category: "movie", name: "Sinhalasub TV Show", url: "/movie/sinhalasub/tvshow?url=https://sinhalasub.lk/tvshows/game-of-thrones-2011-sinhala-subtitles/", description: "Get TV show details from Sinhalasub." },
+            { category: "movie", name: "Sinhalasub Episode", url: "/movie/sinhalasub/episode?url=https://sinhalasub.lk/episodes/game-of-thrones-1x1/", description: "Get episode details from Sinhalasub." },
+            { category: "movie", name: "Pirate Search", url: "/movie/pirate/search?text=2024", description: "Search for movies on Pirate." },
+            { category: "movie", name: "Pirate Movie", url: "/movie/pirate/movie?url=https://pirate.lk/movies/sector-36-2024-sinhala-sub/", description: "Get movie details from Pirate." },
+            { category: "movie", name: "Zoom Search", url: "/movie/zoom/search?text=2024", description: "Search for movies on Zoom." },
+            { category: "movie", name: "Zoom Movie", url: "/movie/zoom/movie?url=https://zoom.lk/red-one-2024-sinhala-subtitle-%e0%b7%83%e0%b7%92%e0%b6%82%e0%b7%84%e0%b6%bd-%e0%b6%8b%e0%b6%b4%e0%b7%83%e0%b7%92%e0%b6%bb%e0%b7%90%e0%b7%83%e0%b7%92/", description: "Get movie details from Zoom." },
+            { category: "movie", name: "FireMovie Search", url: "/movie/firemovie?text=2024", description: "Search for movies on FireMovie." },
+
+            // Tools
+            { category: "tools", name: "Translate", url: "/translate?text=hello&lang=fr", description: "Translate text into different languages." },
+            { category: "tools", name: "Temp Mail", url: "/tempmail", description: "Generate temporary email addresses." },
+            { category: "tools", name: "Ascii generate", url: "/tools/ascii?q=https:dragon", description: "Generate Ascii prompt description" }, 
+            { category: "tools", name: "Get Inbox Temp Mail", url: "/get_inbox_tempmail?q=", description: "Fetch inbox for temporary email." },
+            { category: "tools", name: "Temp Number", url: "/tempnumber", description: "Generate temporary phone numbers." },
+
+            // Education
+            { category: "education", name: "science fruit info", url: "/education/fruit?q=lemon", description: "Get full fruit science analysis." },            
+            { category: "education", name: "Random poem", url: "/education/randompoem", description: "Get random poem ." },
+            { category: "education", name: "dictionary", url: "/education/dictionary?q=cat", description: "Get full word definition and analysis." },
+
+            { category: "education", name: "book Search", url: "/education/booksearch?q=a%20doll%27s%20house", description: "Search books for educational content." },
+            { category: "education", name: "booksearch id", url: "/education/bookid?q=2542", description: "Get the whole book script from the book id." },
+
+            // Gameballs
+                        { category: "gameballs", name: "EPL Upcoming Matches", url: "/epl/upcomingmatches", description: "Get upcoming EPL matches." },
+            { category: "gameballs", name: "EPL Matches", url: "/epl/matches", description: "Get EPL match details." },
+            { category: "gameballs", name: "EPL Standings", url: "/epl/standings", description: "Get EPL standings." },
+            { category: "gameballs", name: "team Search", url: "/search/teams?query=Liverpool", description: "Search for team ." },          
+            { category: "gameballs", name: "player Search", url: "/search/player?query=Witz", description: "Search for player ." },            
+            { category: "gameballs", name: "sport events Search", url: "/search/sport-events?query=Liverpool_vs_Everton", description: "Search for sport events  ." },
+            { category: "gameballs", name: "sport venue Search", url: "/search/sport-venues?query=Anfield", description: "Search for venue/Arena." },
+            { category: "gameballs", name: "EPL Top scorers", url: "/epl/scorers", description: "Get EPL top scorers." },            
+            { category: "gameballs", name: "Bundesliga Upcoming Matches", url: "/bundesliga/upcomingmatches", description: "Get upcoming Bundesliga matches." },
+            { category: "gameballs", name: "Bundesliga Matches", url: "/bundesliga/matches", description: "Get Bundesliga match details." },
+            { category: "gameballs", name: "Bundesliga Standings", url: "/bundesliga/standings", description: "Get Bundesliga standings." },
+            { category: "gameballs", name: "Bundesliga Top Scorers", url: "/bundesliga/scorers", description: "Get Bundesliga top scorers." },
+            { category: "gameballs", name: "Euros Upcoming Matches", url: "/euros/upcomingmatches", description: "Get upcoming Euros matches." },
+            { category: "gameballs", name: "Euros Matches", url: "/euros/matches", description: "Get Euros match details." },
+            { category: "gameballs", name: "Euros Standings", url: "/euros/standings", description: "Get Euros standings." },
+            { category: "gameballs", name: "Euros Top Scorers", url: "/euros/scorers", description: "Get Euros top scorers." },
+            { category: "gameballs", name: "FIFA Upcoming Matches", url: "/fifa/upcomingmatches", description: "Get upcoming FIFA matches." },
+            { category: "gameballs", name: "FIFA Matches", url: "/fifa/matches", description: "Get FIFA match details." },
+            { category: "gameballs", name: "FIFA Standings", url: "/fifa/standings", description: "Get FIFA standings." },
+            { category: "gameballs", name: "FIFA Top Scorers", url: "/fifa/scorers", description: "Get FIFA top scorers." },
+            { category: "gameballs", name: "La Liga Upcoming Matches", url: "/laliga/upcomingmatches", description: "Get upcoming La Liga matches." },
+            { category: "gameballs", name: "La Liga Matches", url: "/laliga/matches", description: "Get La Liga match details." },
+            { category: "gameballs", name: "La Liga Standings", url: "/laliga/standings", description: "Get La Liga standings." },
+            { category: "gameballs", name: "La Liga Top Scorers", url: "/laliga/scorers", description: "Get La Liga top scorers." },
+            { category: "gameballs", name: "Ligue 1 Upcoming Matches", url: "/ligue1/upcomingmatches", description: "Get upcoming Ligue 1 matches." },
+            { category: "gameballs", name: "Ligue 1 Matches", url: "/ligue1/matches", description: "Get Ligue 1 match details." },
+            { category: "gameballs", name: "Ligue 1 Standings", url: "/ligue1/standings", description: "Get Ligue 1 standings." },
+            { category: "gameballs", name: "Ligue 1 Top Scorers", url: "/ligue1/scorers", description: "Get Ligue 1 top scorers." },
+            { category: "gameballs", name: "Serie A Upcoming Matches", url: "/seriea/upcomingmatches", description: "Get upcoming Serie A matches." },
+            { category: "gameballs", name: "Serie A Matches", url: "/seriea/matches", description: "Get Serie A match details." },
+            { category: "gameballs", name: "Serie A Standings", url: "/seriea/standings", description: "Get Serie A standings." },
+            { category: "gameballs", name: "Serie A Top Scorers", url: "/seriea/scorers", description: "Get Serie A top scorers." },
+            { category: "gameballs", name: "UCL Upcoming Matches", url: "/ucl/upcomingmatches", description: "Get upcoming UCL matches." },
+            { category: "gameballs", name: "UCL Matches", url: "/ucl/matches", description: "Get UCL match details." },
+            { category: "gameballs", name: "UCL Standings", url: "/ucl/standings", description: "Get UCL standings." },
+            { category: "gameballs", name: "UCL Top Scorers", url: "/ucl/scorers", description: "Get UCL top scorers." },
+
+
+            // Stalkers
+           { category: "stalkers", name: "TikTok Stalk", url: "/stalker/tiktok?user=fredi255", description: "Stalk TikTok profiles." },        
+            { category: "stalkers", name: "TikTok Stalk2", url: "/stalker/tiktok2?user=fredi255", description: "Stalk TikTok profiles." },
+            { category: "stalkers", name: "Instagram Stalk", url: "/stalker/ig?user=frediezra ", description: "Stalk Instagram profile" },
+            { category: "stalkers", name: "GitHub Repo Stalk", url: "/stalker/repostalk?url=https://github.com/mr-X-force/LUCKY-MD-XFORCE", description: "Stalk GitHub repository." },  
+            { category: "stalkers", name: "GitHub Trends", url: "/stalker/githubtrend?language=python&since=weekly", description: "Get GitHub trends." },  
+            
+            { category: "stalkers", name: "Twitter Stalk", url: "/stalker/twitter?user=frediezra", description: "Stalk Twitter profile." },  
+            { category: "stalkers", name: "Youtube channel Stalk", url: "/stalker/ytchannel?user=freeonlinetvT1", description: "Stalk user YouTube channel." },
+            { category: "stalkers", name: "wachannel Stalk", url: "/stalker/wachannel?url=https://whatsapp.com/channel/0029VaihcQv84Om8LP59fO3f", description: "Stalk Whatsapp channel." },   
+            { category: "stalkers", name: "wachannel Stalk2", url: "/stalker/wachannel2?url=https://whatsapp.com/channel/0029VaihcQv84Om8LP59fO3f", description: "Stalk Whatsapp channel." },   
+        
+            { category: "stalkers", name: "Country info Stalk", url: "/stalker/country?region=Tanzania", description: "Stalk Country Info." },  
+            { category: "stalkers", name: "NPM Stalk", url: "/stalker/npm?q=baileys", description: "Stalk NPM package." },
+            { category: "stalkers", name: "IP Stalk", url: "/stalker/ip?q=41.90.216.105", description: "Stalk IP address." },
+
+            // Fun
+            { category: "fun", name: "Truth", url: "/fun/truth", description: "Get a random truth question." },
+            { category: "fun", name: "Dare", url: "/fun/dare", description: "Get a random dare." },
+            { category: "fun", name: "would you rather", url: "/fun/would-you-rather", description: "Get a random would you rather" },
+            { category: "fun", name: "Paranoia", url: "/fun/paranoia", description: "Get a random paranoia." },
+            { category: "fun", name: "pickupline", url: "/fun/pickuplines", description: "Get a random pickupline." },
+            { category: "fun", name: "fact", url: "/fun/fact", description: "Get a random fact." },
+            { category: "fun", name: "insult", url: "/fun/insult", description: "Get a random insult" },
+            { category: "fun", name: "jokes", url: "/fun/jokes", description: "Get a random jokes" },
+            { category: "fun", name: "meme", url: "/fun/meme", description: "Get a random meme images." },
+            { category: "fun", name: "question", url: "/fun/question", description: "Get a random question." },
+           { category: "fun", name: "quote", url: "/fun/quote", description: "Get a random quote ." },
+             
+            { category: "fun", name: "never have i ever", url: "/fun/never-have-i-ever", description: "Get a random never have i ever" },
+
+
+            // Random
+            { category: "random", name: "Random Fact", url: "/random/fact", description: "Get a random interesting fact." },
+            { category: "random", name: "Random Joke", url: "/random/joke", description: "Get a random joke." },
+            
+            // Anime
+            { category: "anime", name: "Anime Finder", url: "/anime/animefinder?url=https://files.catbox.moe/3o37c5.jpeg", description: "find anime from an image." },
+            { category: "anime", name: "Anime News", url: "/anime/animenews", description: "Search for anime news." },
+            
+            // Shortener
+            { category: "shortener", name: "Tiny url", url: "/shortener/tinyurl?url=https://example.com", description: "Shorten long URLs." },
+            { category: "shortener", name: "Bitly", url: "/shortener/bitly?url=https://example.com", description: "Shorten long URLs." },
+            { category: "shortener", name: "Ulvis shortener", url: "/shortener/ulvis?url=https://github.com/mr-X-force/LUCKY-MD-XFORC&name=luckybot", description: "Shorten long URLs." },
+            
+            // Games
+            { category: "games", name: "Game Info", url: "/games/info?name=Minecraft", description: "Get information about games." },
+            
+            // Fredi
+            
+            { category: "fredi", name: "Report any issue", url: "/tools/report?q=Check%20this%20image&contact=255752593977&name=fredi", description: "Report to developer any issue you are experiencing." },
+            { category: "fredi", name: "Fredi Ai Info", url: "/fredi/info", description: "Get information about fredi Ai." }
+        ];
+
+        // Initialize tables and endpoints
+        function initEndpoints() {
+            const categories = {
+                downloaders: document.querySelector("#downloaders tbody"),
+                ai: document.querySelector("#ai tbody"),
+                movie: document.querySelector("#movie tbody"),
+                search: document.querySelector("#search tbody"),
+                tools: document.querySelector("#tools tbody"),
+                images: document.querySelector("#images tbody"),
+                education: document.querySelector("#education tbody"),
+                gameballs: document.querySelector("#gameballs tbody"),
+                stalkers: document.querySelector("#stalkers tbody"),
+                fun: document.querySelector("#fun tbody"),
+                random: document.querySelector("#random tbody"),
+                anime: document.querySelector("#anime tbody"),
+                shortener: document.querySelector("#shortener tbody"),
+                games: document.querySelector("#games tbody"),
+                keith: document.querySelector("#fredi tbody")
+            };
+
+            const categoryCounts = {
+                downloaders: 0,
+                ai: 0,
+                movie: 0,
+                search: 0,
+                tools: 0,
+                images: 0,
+                education: 0,
+                gameballs: 0,
+                stalkers: 0,
+                fun: 0,
+                random: 0,
+                anime: 0,
+                shortener: 0,
+                games: 0,
+                fredi: 0
+            };
+
+            let activeEndpoints = 0;
+
+            // Count endpoints in each category
+            endpoints.forEach(endpoint => {
+                categoryCounts[endpoint.category]++;
+            });
+
+            // Update total endpoints and categories count
+            const totalEndpoints = endpoints.length;
+            totalEndpointsElement.textContent = totalEndpoints.toLocaleString();
+            
+            const categoriesCount = Object.keys(categoryCounts).length;
+            categoriesCountElement.textContent = categoriesCount;
+
+            // Update category counts in the UI
+            Object.keys(categoryCounts).forEach(category => {
+                const element = document.getElementById(`${category}-count`);
+                if (element) {
+                    element.textContent = `${categoryCounts[category]} endpoint${categoryCounts[category] !== 1 ? 's' : ''}`;
+                }
+            });
+
+            // Render endpoints
+            endpoints.forEach((endpoint, index) => {
+                const row = document.createElement("tr");
+
+                const numberCell = document.createElement("td");
+                numberCell.textContent = index + 1;
+
+                const nameCell = document.createElement("td");
+                nameCell.className = "endpoint-name";
+                nameCell.textContent = endpoint.name;
+
+                const descriptionCell = document.createElement("td");
+                descriptionCell.className = "endpoint-description";
+                descriptionCell.textContent = endpoint.description;
+
+                const statusCell = document.createElement("td");
+                const statusText = document.createElement("span");
+                statusText.className = "status testing";
+                statusText.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> testing...`;
+                statusCell.appendChild(statusText);
+
+                const actionsCell = document.createElement("td");
+                const tryBtn = document.createElement("a");
+                tryBtn.className = "try-btn";
+                tryBtn.innerHTML = `<i class="fas fa-external-link-alt"></i> Try`;
+                tryBtn.href = endpoint.url;
+                tryBtn.target = "_blank";
+                tryBtn.rel = "noopener noreferrer";
+                actionsCell.appendChild(tryBtn);
+
+                row.appendChild(numberCell);
+                row.appendChild(nameCell);
+                row.appendChild(descriptionCell);
+                row.appendChild(statusCell);
+                row.appendChild(actionsCell);
+
+                if (categories[endpoint.category]) {
+                    categories[endpoint.category].appendChild(row);
+                }
+
+                const timeoutId = setTimeout(() => {
+                    statusText.innerHTML = `<i class="fas fa-times"></i> inactive`;
+                    statusText.className = "status inactive";
+                }, TIMEOUT_DURATION);
+
+                fetch(endpoint.url)
+                    .then(response => {
+                        if (!response.ok) throw new Error("API error");
+                        return response.json();
+                    })
+                    .then(data => {
+                        clearTimeout(timeoutId);
+                        if (data.success === true || data.status === true) {
+                            statusText.innerHTML = `<i class="fas fa-check"></i> active <span class="blinking-dot"></span>`;
+                            statusText.className = "status active";
+                            activeEndpoints++;
+                            activeEndpointsElement.textContent = activeEndpoints.toLocaleString();
+                        } else {
+                            statusText.innerHTML = `<i class="fas fa-times"></i> inactive`;
+                            statusText.className = "status inactive";
+                        }
+                    })
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        statusText.innerHTML = `<i class="fas fa-times"></i> inactive`;
+                        statusText.className = "status inactive";
+                        console.error(`Error checking endpoint ${endpoint.name}:`, error);
+                    });
+            });
+        }
+
+        // Event Listeners
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            initEndpoints();
+        });
+    </script>
+</body>
+</html>
