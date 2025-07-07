@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fredi AI | Tool Convertor</title>
+  <link rel="icon" href="https://files.catbox.moe/hlyv1s.jpg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --main-red: #ff1e56;
+      --red-dark: #cc143f;
+      --neon-glow: 0 0 15px rgba(255, 30, 86, 0.8);
+      --bg: #0e0e0e;
+      --white: #ffffff;
+      --whatsapp: #25D366;
+      --telegram: #0088cc;
+      --github: #000000;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1a1a1a;
+      box-shadow: 0 2px 10px rgba(255, 30, 86, 0.2);
+    }
+
+    header h1 {
+      color: var(--main-red);
+      font-size: 1.5rem;
+      text-shadow: var(--neon-glow);
+    }
+
+    .github {
+      background: var(--github);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s ease;
+    }
+
+    .github:hover {
+      opacity: 0.9;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      color: var(--main-red);
+      margin-bottom: 1rem;
+      text-shadow: var(--neon-glow);
+    }
+
+    .hero p {
+      max-width: 600px;
+      font-size: 1rem;
+      color: #ccc;
+      margin-bottom: 3rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      background: var(--main-red);
+      color: var(--white);
+      padding: 1rem 2rem;
+      border: none;
+      font-size: 1rem;
+      border-radius: 12px;
+      box-shadow: var(--neon-glow);
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      transform: scale(1.05);
+      background: var(--red-dark);
+    }
+
+    .floating-icon {
+      position: fixed;
+      bottom: 20px;
+      z-index: 999;
+      padding: 14px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: white;
+    }
+
+    .whatsapp {
+      background: var(--whatsapp);
+      right: 20px;
+    }
+
+    .telegram {
+      background: var(--telegram);
+      left: 20px;
+    }
+
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+      padding: 2rem 1rem;
+      border-top: 1px solid #333;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Fredi AI | Tools Convertor</h1>
+    <a href="https://github.com/Fred1e" target="_blank" class="github">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+  </header>
+
+  <section class="hero">
+    <h2>All-in-One Docs Conversion</h2>
+    <p>Quickly explore full documentation from any source or view clean HTML content from URLs in seconds. Fredi AI helps you extract, clean, and preview documentation files with ease.</p>
+    
+    <div class="btn-group">
+      <a href="webextract.html" class="tool-btn"><i class="fas fa-search"></i> Explore Website Extractor</a>
+      <a href="htmlview.html" class="tool-btn"><i class="fas fa-eye"></i> Explore HTML view</a>
+    </div>
+  </section>
+
+  <a href="https://wa.me/255752593977" class="floating-icon whatsapp" title="Chat on WhatsApp" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <a href="https://t.me/freditech" class="floating-icon telegram" title="Join Telegram" target="_blank">
+    <i class="fab fa-telegram-plane"></i>
+  </a>
+
+  <footer>
+    &copy; 2025 FrediEzra Tech | All rights reserved.
+  </footer>
+
+</body>
+</html>
