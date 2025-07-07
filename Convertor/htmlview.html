@@ -1,169 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fredi HTML Runner</title>
-    <style>
-        :root {
-            --primary-color: #4a6baf;
-            --dark-bg: #1a1a2e;
-            --light-text: #f0f0f0;
-            --editor-bg: #282c34;
-            --preview-bg: #ffffff;
-            --border-color: #444;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: var(--dark-bg);
-            color: var(--light-text);
-            min-height: 100vh;
-        }
-        
-        .container {
-            display: grid;
-            grid-template-rows: auto 1fr;
-            height: 100vh;
-        }
-        
-        h1 {
-            text-align: center;
-            padding: 15px;
-        }
-        
-        .editor-preview-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 0 10px 10px;
-            height: calc(100vh - 60px);
-        }
-        
-        @media (max-width: 768px) {
-            .editor-preview-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr 1fr;
-            }
-        }
-        
-        .editor-container {
-            background-color: var(--editor-bg);
-            border-radius: 5px;
-            overflow: hidden;
-            display: grid;
-            grid-template-rows: auto 1fr;
-        }
-        
-        .editor-header {
-            padding: 10px;
-            background-color: rgba(0, 0, 0, 0.2);
-            font-weight: bold;
-        }
-        
-        #html-editor {
-            width: 100%;
-            height: 100%;
-            padding: 15px;
-            border: none;
-            background-color: var(--editor-bg);
-            color: #abb2bf;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            resize: none;
-            outline: none;
-        }
-        
-        .preview-container {
-            background-color: var(--preview-bg);
-            border-radius: 5px;
-            overflow: hidden;
-            display: grid;
-            grid-template-rows: auto 1fr;
-        }
-        
-        .preview-header {
-            padding: 10px;
-            background-color: #f0f0f0;
-            color: #333;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .preview-refresh {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        
-        .preview-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background-color: white;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fredi HTML Runner</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --main-red: #ff1e56;
+      --dark-bg: #0e0e0e;
+      --light-text: #f0f0f0;
+      --editor-bg: #1c1c1c;
+      --preview-bg: #fff;
+      --neon-glow: 0 0 8px rgba(255, 30, 86, 0.8);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--light-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      flex: 1;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 15px;
+      font-size: 1.8rem;
+      color: var(--main-red);
+      text-shadow: var(--neon-glow);
+      position: relative;
+    }
+
+    .github-badge {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: #333;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      box-shadow: var(--neon-glow);
+    }
+
+    .editor-preview-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 10px 10px;
+    }
+
+    @media (max-width: 768px) {
+      .editor-preview-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+    }
+
+    .editor-container, .preview-container {
+      border-radius: 8px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .editor-container {
+      background-color: var(--editor-bg);
+    }
+
+    .editor-header {
+      padding: 10px;
+      background-color: rgba(255, 30, 86, 0.1);
+      font-weight: bold;
+      color: var(--main-red);
+      text-shadow: var(--neon-glow);
+    }
+
+    #html-editor {
+      width: 100%;
+      height: 100%;
+      padding: 15px;
+      border: none;
+      background-color: var(--editor-bg);
+      color: #ffdee9;
+      font-family: monospace;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+    }
+
+    .preview-container {
+      background-color: var(--preview-bg);
+    }
+
+    .preview-header {
+      padding: 10px;
+      background-color: #f0f0f0;
+      color: #333;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .preview-refresh {
+      background-color: var(--main-red);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: var(--neon-glow);
+    }
+
+    .preview-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Floating buttons */
+    .whatsapp-float, .telegram-float {
+      position: fixed;
+      z-index: 1000;
+      padding: 12px;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      cursor: pointer;
+    }
+
+    .whatsapp-float {
+      background-color: #25D366;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .telegram-float {
+      background-color: #0088cc;
+      bottom: 90px;
+      left: 20px;
+    }
+
+    .whatsapp-float:hover, .telegram-float:hover {
+      opacity: 0.85;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>FREDI HTML RUNNER</h1>
-        <div class="editor-preview-container">
-            <div class="editor-container">
-                <div class="editor-header">HTML Editor</div>
-                <textarea id="html-editor" spellcheck="false"><!DOCTYPE html>
+  <div class="container">
+    <h1>
+      FREDI HTML RUNNER
+      <a href="https://github.com/Fred1e" target="_blank" class="github-badge">GitHub</a>
+    </h1>
+    <div class="editor-preview-container">
+      <div class="editor-container">
+        <div class="editor-header">HTML Editor</div>
+        <textarea id="html-editor" spellcheck="false"><!DOCTYPE html>
 <html>
 <head>
-    <title>My Page</title>
+  <title>My Page</title>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>Edit this HTML to see live changes</p>
+  <h1>Hello World!</h1>
+  <p>Edit this HTML to see live changes</p>
 </body>
 </html></textarea>
-            </div>
-            <div class="preview-container">
-                <div class="preview-header">
-                    <span>Live Preview</span>
-                    <button class="preview-refresh" id="refresh-btn">Refresh</button>
-                </div>
-                <iframe id="preview-frame" class="preview-frame"></iframe>
-            </div>
+      </div>
+      <div class="preview-container">
+        <div class="preview-header">
+          <span>Live Preview</span>
+          <button class="preview-refresh" id="refresh-btn">Refresh</button>
         </div>
+        <iframe id="preview-frame" class="preview-frame"></iframe>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const htmlEditor = document.getElementById('html-editor');
-        const previewFrame = document.getElementById('preview-frame');
-        const refreshBtn = document.getElementById('refresh-btn');
+  <!-- WhatsApp -->
+  <a href="https://wa.me/255752593977" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 
-        function updatePreview() {
-            previewFrame.srcdoc = htmlEditor.value;
-        }
+  <!-- Telegram -->
+  <a href="https://t.me/freditech" target="_blank" class="telegram-float" title="Join Telegram">
+    <i class="fab fa-telegram-plane"></i>
+  </a>
 
-        // Update preview on editor changes (with slight delay for performance)
-        let updateTimer;
-        htmlEditor.addEventListener('input', () => {
-            clearTimeout(updateTimer);
-            updateTimer = setTimeout(updatePreview, 500);
-        });
+  <script>
+    const htmlEditor = document.getElementById('html-editor');
+    const previewFrame = document.getElementById('preview-frame');
+    const refreshBtn = document.getElementById('refresh-btn');
 
-        // Manual refresh button
-        refreshBtn.addEventListener('click', updatePreview);
+    function updatePreview() {
+      previewFrame.srcdoc = htmlEditor.value;
+    }
 
-        // Initial preview
-        updatePreview();
-    </script>
+    let updateTimer;
+    htmlEditor.addEventListener('input', () => {
+      clearTimeout(updateTimer);
+      updateTimer = setTimeout(updatePreview, 500);
+    });
+
+    refreshBtn.addEventListener('click', updatePreview);
+
+    updatePreview();
+  </script>
 </body>
 </html>
