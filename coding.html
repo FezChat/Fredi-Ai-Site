@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.css">
     <link rel="stylesheet" href="css/coding.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
@@ -19,7 +18,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closetag.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript-obfuscator/4.0.0/index.min.js"></script>
 </head>
 <body>
@@ -41,7 +39,7 @@
         </div>
         
         <div class="nav-section">
-            <h3><i class="fas fa-code"></i> Code Tools</h3>
+            <h3><i class="fas fa-code"></i> Coding Tools</h3>
             <ul>
                 <li><a href="#" data-tool="html-viewer"><i class="fab fa-html5"></i> HTML Viewer</a></li>
                 <li><a href="#" data-tool="js-runner"><i class="fab fa-js"></i> JavaScript Runner</a></li>
@@ -53,9 +51,10 @@
         <div class="nav-section">
             <h3><i class="fas fa-exchange-alt"></i> Converters</h3>
             <ul>
-                <li><a href="#" data-tool="base64"><i class="fas fa-key"></i> Base64 Encoder/Decoder</a></li>
+                <li><a href="#" data-tool="base64"><i class="fas fa-key"></i> Base64 Tools</a></li>
                 <li><a href="#" data-tool="text-binary"><i class="fas fa-random"></i> Text ↔ Binary</a></li>
                 <li><a href="#" data-tool="color-viewer"><i class="fas fa-palette"></i> Color Viewer</a></li>
+                <li><a href="#" data-tool="binary-text"><i class="fas fa-code"></i> Binary → Text</a></li>
             </ul>
         </div>
         
@@ -124,12 +123,12 @@
                     <div class="quick-stats">
                         <div class="stat-card">
                             <i class="fas fa-code"></i>
-                            <h3>8+</h3>
+                            <h3>10+</h3>
                             <p>Development Tools</p>
                         </div>
                         <div class="stat-card">
                             <i class="fas fa-file-code"></i>
-                            <h3>10+</h3>
+                            <h3>15+</h3>
                             <p>File Formats Supported</p>
                         </div>
                         <div class="stat-card">
@@ -145,7 +144,7 @@
                     </div>
                     
                     <div class="recent-tools">
-                        <h3><i class="fas fa-history"></i> Recently Used Tools</h3>
+                        <h3><i class="fas fa-history"></i> Quick Access Tools</h3>
                         <div class="tool-grid">
                             <button class="tool-card" data-tool="file-manager">
                                 <i class="fas fa-folder"></i>
@@ -155,73 +154,32 @@
                                 <i class="fas fa-code"></i>
                                 <span>Code Editor</span>
                             </button>
-                            <button class="tool-card" data-tool="html-viewer">
-                                <i class="fab fa-html5"></i>
-                                <span>HTML Viewer</span>
-                            </button>
                             <button class="tool-card" data-tool="base64">
                                 <i class="fas fa-key"></i>
                                 <span>Base64 Tool</span>
+                            </button>
+                            <button class="tool-card" data-tool="html-viewer">
+                                <i class="fab fa-html5"></i>
+                                <span>HTML Viewer</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- File Manager -->
-            <div class="tool-container" id="file-manager">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- Code Editor -->
-            <div class="tool-container" id="code-editor">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- Media Player -->
-            <div class="tool-container" id="media-player">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- HTML Viewer -->
-            <div class="tool-container" id="html-viewer">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- JavaScript Runner -->
-            <div class="tool-container" id="js-runner">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- Python Runner -->
-            <div class="tool-container" id="python-runner">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- JS Obfuscator -->
-            <div class="tool-container" id="js-obfuscator">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- Base64 Encoder/Decoder -->
-            <div class="tool-container" id="base64">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- Text to Binary Converter -->
-            <div class="tool-container" id="text-binary">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- Color Viewer -->
-            <div class="tool-container" id="color-viewer">
-                <!-- Content will be loaded dynamically -->
-            </div>
-
-            <!-- Website Extractor -->
-            <div class="tool-container" id="website-extractor">
-                <!-- Content will be loaded dynamically -->
-            </div>
+            <!-- Tool Containers -->
+            <div class="tool-container" id="file-manager"></div>
+            <div class="tool-container" id="code-editor"></div>
+            <div class="tool-container" id="media-player"></div>
+            <div class="tool-container" id="html-viewer"></div>
+            <div class="tool-container" id="js-runner"></div>
+            <div class="tool-container" id="python-runner"></div>
+            <div class="tool-container" id="js-obfuscator"></div>
+            <div class="tool-container" id="base64"></div>
+            <div class="tool-container" id="text-binary"></div>
+            <div class="tool-container" id="color-viewer"></div>
+            <div class="tool-container" id="binary-text"></div>
+            <div class="tool-container" id="website-extractor"></div>
         </div>
 
         <!-- Status Bar -->
@@ -236,7 +194,7 @@
             </div>
             <div class="status-right">
                 <span id="device-info">
-                    <i class="fas fa-desktop"></i> Desktop View
+                    <i class="fas fa-desktop"></i> Desktop
                 </span>
                 <span id="memory-usage">
                     <i class="fas fa-memory"></i> <span id="memory-value">--</span> MB
@@ -245,7 +203,7 @@
         </footer>
     </main>
 
-    <!-- File Upload Modal -->
+    <!-- Modals -->
     <div class="modal" id="file-upload-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -259,29 +217,11 @@
                     <input type="file" id="file-input" multiple style="display: none;">
                     <button class="btn btn-secondary" id="browse-btn">Browse Files</button>
                 </div>
-                <div class="upload-progress" id="upload-progress">
-                    <!-- Progress will be shown here -->
-                </div>
+                <div class="upload-progress" id="upload-progress"></div>
             </div>
         </div>
     </div>
 
-    <!-- File Info Modal -->
-    <div class="modal" id="file-info-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-info-circle"></i> File Information</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="file-info-content" id="file-info-content">
-                    <!-- File info will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Video Player Modal -->
     <div class="modal video-modal" id="video-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -307,16 +247,15 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div class="toast" id="toast">
         <div class="toast-content">
             <i class="fas fa-check-circle"></i>
-            <span id="toast-message">Operation completed successfully</span>
+            <span id="toast-message">Operation completed</span>
         </div>
     </div>
 
     <!-- JavaScript Files -->
     <script src="JavaScript/coding.js"></script>
-    <script src="coding-tools.js"></script>
+    <script src="JavaScript/coding-tools.js"></script>
 </body>
 </html>
