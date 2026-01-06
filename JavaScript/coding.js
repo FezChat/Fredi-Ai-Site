@@ -2,9 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
     const sidebar = document.querySelector('.sidebar');
-    const mainContent = document.querySelector('.main-content');
     const menuToggle = document.getElementById('menu-toggle');
-    const toolContent = document.getElementById('tool-content');
     const currentTool = document.getElementById('current-tool');
     const navLinks = document.querySelectorAll('.nav-section a');
     const toolCards = document.querySelectorAll('.tool-card');
@@ -13,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const welcomeScreen = document.getElementById('welcome-screen');
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toast-message');
+    const toolContainers = document.querySelectorAll('.tool-container');
     
     // Initialize dashboard
     initDashboard();
@@ -21,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set default theme
         const savedTheme = localStorage.getItem('dashboard-theme') || 'dark';
         setTheme(savedTheme);
+        
+        // Update active theme button
+        themeButtons.forEach(btn => {
+            if (btn.getAttribute('data-theme') === savedTheme) {
+                btn.classList.add('active');
+            }
+        });
         
         // Update memory usage
         updateMemoryUsage();
@@ -33,6 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             showWelcomeScreen();
         }
+        
+        // Setup file upload
+        setupFileUpload();
+        
+        // Setup video player
+        setupVideoPlayer();
+        
+        // Setup modals
+        setupModals();
     }
     
     // Toggle sidebar on mobile
@@ -55,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('active');
             
             // Close sidebar on mobile
-            if (window.innerWidth <= 1024) {
+            if (window.innerWidth <= 1200) {
                 sidebar.classList.remove('active');
                 menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
             }
@@ -83,19 +98,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Save all button
-    saveAllBtn.addEventListener('click', function() {
-        showToast('All changes saved successfully!', 'success');
-        // Here you would implement actual save functionality
-    });
-    
-    // File upload functionality
-    setupFileUpload();
-    
-    // Video player functionality
-    setupVideoPlayer();
-    
-    // Modal handling
-    setupModals();
+    if (saveAllBtn) {
+        saveAllBtn.addEventListener('click', function() {
+            showToast('All changes saved successfully!', 'success');
+        });
+    }
     
     // Tool loading function
     function loadTool(toolName) {
@@ -103,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function() {
         welcomeScreen.classList.remove('active');
         
         // Hide all tool containers
-        const toolContainers = document.querySelectorAll('.tool-container');
         toolContainers.forEach(container => {
             container.classList.remove('active');
         });
@@ -128,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function showWelcomeScreen() {
         // Hide all tool containers
-        const toolContainers = document.querySelectorAll('.tool-container');
         toolContainers.forEach(container => {
             container.classList.remove('active');
         });
@@ -143,32 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('last-tool', 'welcome');
     }
     
-    function loadToolContent(toolName, container) {
-        // Load tool-specific HTML content
-        const tools = {
-            'file-manager': getFileManagerHTML(),
-            'code-editor': getCodeEditorHTML(),
-            'media-player': getMediaPlayerHTML(),
-            'html-viewer': getHtmlViewerHTML(),
-            'js-runner': getJsRunnerHTML(),
-            'python-runner': getPythonRunnerHTML(),
-            'js-obfuscator': getJsObfuscatorHTML(),
-            'base64': getBase64HTML(),
-            'text-binary': getTextBinaryHTML(),
-            'color-viewer': getColorViewerHTML(),
-            'website-extractor': getWebsiteExtractorHTML()
-        };
-        
-        if (tools[toolName]) {
-            container.innerHTML = tools[toolName];
-            
-            // Initialize tool-specific functionality
-            setTimeout(() => {
-                initToolFunctionality(toolName);
-            }, 100);
-        }
-    }
-    
     function getToolName(toolId) {
         const toolNames = {
             'file-manager': 'File Manager',
@@ -178,23 +157,19 @@ document.addEventListener('DOMContentLoaded', function() {
             'js-runner': 'JavaScript Runner',
             'python-runner': 'Python Runner',
             'js-obfuscator': 'JavaScript Obfuscator',
-            'base64': 'Base64 Encoder/Decoder',
-            'text-binary': 'Text ↔ Binary Converter',
+            'base64': 'Base64 Tools',
+            'text-binary': 'Text ↔ Binary',
             'color-viewer': 'Color Viewer',
+            'binary-text': 'Binary → Text',
             'website-extractor': 'Website Extractor'
         };
         
-        return toolNames[toolId] || toolId;
+        return toolNames[toolId] || toolId.replace('-', ' ').toUpperCase();
     }
     
     function setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('dashboard-theme', theme);
-        
-        // Update CodeMirror theme if available
-        if (window.editor) {
-            window.editor.setOption('theme', theme === 'dark' ? 'dracula' : 'default');
-        }
     }
     
     function updateMemoryUsage() {
@@ -213,13 +188,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set icon based on type
         if (type === 'error') {
             toastIcon.className = 'fas fa-exclamation-circle';
-            toast.style.backgroundColor = 'var(--error-color)';
+            toast.classList.add('error');
+            toast.classList.remove('warning');
         } else if (type === 'warning') {
             toastIcon.className = 'fas fa-exclamation-triangle';
-            toast.style.backgroundColor = 'var(--warning-color)';
+            toast.classList.add('warning');
+            toast.classList.remove('error');
         } else {
             toastIcon.className = 'fas fa-check-circle';
-            toast.style.backgroundColor = 'var(--success-color)';
+            toast.classList.remove('error', 'warning');
         }
         
         toast.classList.add('show');
@@ -292,9 +269,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             [...files].forEach((file, index) => {
                 const progressItem = document.createElement('div');
-                progressItem.className = 'progress-item';
+                progressItem.className = 'progress-item mb-1';
                 progressItem.innerHTML = `
-                    <div class="flex-between">
+                    <div class="flex justify-between mb-1">
                         <span>${file.name}</span>
                         <span class="file-size">${formatFileSize(file.size)}</span>
                     </div>
@@ -409,44 +386,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
     
-    // Expose functions to global scope for tool initialization
+    // Expose functions to global scope
     window.loadTool = loadTool;
     window.showToast = showToast;
     window.formatFileSize = formatFileSize;
 });
-
-// Tool-specific initialization
-function initToolFunctionality(toolName) {
-    switch(toolName) {
-        case 'file-manager':
-            initFileManager();
-            break;
-        case 'code-editor':
-            initCodeEditor();
-            break;
-        case 'html-viewer':
-            initHtmlViewer();
-            break;
-        case 'js-runner':
-            initJsRunner();
-            break;
-        case 'python-runner':
-            initPythonRunner();
-            break;
-        case 'js-obfuscator':
-            initJsObfuscator();
-            break;
-        case 'base64':
-            initBase64();
-            break;
-        case 'text-binary':
-            initTextBinary();
-            break;
-        case 'color-viewer':
-            initColorViewer();
-            break;
-        case 'website-extractor':
-            initWebsiteExtractor();
-            break;
-    }
-}
