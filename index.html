@@ -2,506 +2,181 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fredi AI - Developer Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEE-ONLINE | Fredi Ezra Portfolio</title>
+    <link rel="icon" href="https://files.catbox.moe/el0qlh.jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-content">
-            <div class="loader"></div>
-            <h2>Fredi AI</h2>
-            <p>Loading dashboard...</p>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://files.catbox.moe/el0qlh.jpeg" alt="FEE-ONLINE">
+            <span>FEE-ONLINE</span>
         </div>
-    </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#projects">Projects</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+            <a href="login.html" class="btn-primary">Login</a>
+            <a href="signup.html" class="btn-secondary">Sign Up</a>
+        </div>
+    </nav>
 
-    <!-- Scroll to Top -->
-    <button class="scroll-top" id="scrollTop">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <!-- Top Header -->
-    <header class="header">
-        <div class="header-container">
-            <div class="logo">
-                <div class="logo-icon">F</div>
-                <div class="logo-text">
-                    <span class="logo-main">FREDI</span>
-                    <span class="logo-sub">AI DEVELOPER</span>
-                </div>
+    <!-- Hero Section with Real Info -->
+    <section class="hero">
+        <div class="hero-content">
+            <img src="https://files.catbox.moe/el0qlh.jpeg" alt="Fredi Ezra" class="hero-img">
+            <h1>Fredi E. Ezra</h1>
+            <h2>Developer & CEO @ FEE-ONLINE</h2>
+            <p class="location"><i class="fas fa-map-marker-alt"></i> Tanzania</p>
+            <div class="contact-hero">
+                <p><i class="fas fa-envelope"></i> frediezra360@gmail.com</p>
+                <p><i class="fab fa-whatsapp"></i> +255 752 593 977</p>
             </div>
-
-            <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                    <i class="fas fa-sun"></i>
-                </button>
-
-                <div class="user-profile">
-                    <div class="avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="user-info">
-                        <span class="user-name">Fredi Ezra</span>
-                        <span class="user-role">Bot Developer</span>
-                    </div>
-                </div>
+            <div class="social-links">
+                <a href="https://github.com/Fred1e" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/FezChat" target="_blank"><i class="fab fa-github"></i> FezChat</a>
+                <a href="https://whatsapp.com/channel/0029Vb6mzVF7tkj42VNPrZ3V" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://facebook.com/FrediEzra" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://instagram.com/frediezra" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://tiktok.com/@frediezra1" target="_blank"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
-    </header>
+    </section>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Hero Section -->
-        <section class="hero-section" id="home">
-            <div class="hero-content">
-                <div class="welcome-message">
-                    <h1 class="hero-title">
-                        <span class="greeting" id="greeting">Welcome</span>
-                        <span class="highlight">Fredi Ezra</span>
-                    </h1>
-                    <p class="hero-subtitle">
-                        AI & Bot Developer from Arusha, Tanzania. Creator of FEE-XMD & LUCKY-MD WhatsApp bots.
-                    </p>
-
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <i class="fas fa-code"></i>
-                            <div>
-                                <span class="stat-number">10+</span>
-                                <span class="stat-label">Projects</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fab fa-whatsapp"></i>
-                            <div>
-                                <span class="stat-number">50K+</span>
-                                <span class="stat-label">Bot Users</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-star"></i>
-                            <div>
-                                <span class="stat-number">200+</span>
-                                <span class="stat-label">Features</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hero-image">
-                    <div class="bot-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Developer Info Section -->
-        <section class="developer-section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-user-tie"></i>
-                    About the Developer
-                </h2>
-                <p class="section-subtitle">Fredi AI Tech - Building the future of WhatsApp automation</p>
-            </div>
-
-            <div class="developer-grid">
-                <div class="info-card">
-                    <div class="info-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <h3>Location</h3>
-                    <p>Arusha, Tanzania</p>
-                </div>
-
-                <div class="info-card">
-                    <div class="info-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <h3>Email</h3>
-                    <p>frediezra360@gmail.com</p>
-                </div>
-
-                <div class="info-card">
-                    <div class="info-icon">
-                        <i class="fab fa-whatsapp"></i>
-                    </div>
-                    <h3>WhatsApp</h3>
-                    <p>+255 764 182 801</p>
-                    <p>+256 752 593 977</p>
-                </div>
-
-                <div class="info-card">
-                    <div class="info-icon">
-                        <i class="fab fa-github"></i>
-                    </div>
-                    <h3>GitHub</h3>
-                    <p>github.com/Fred1e</p>
-                    <p>github.com/mr-X-force</p>
-                </div>
-            </div>
-
-            <div class="skills-section">
-                <h3 class="skills-title">
-                    <i class="fas fa-tools"></i>
-                    Technical Expertise
-                </h3>
-                <div class="skills-grid">
-                    <span class="skill-tag">WhatsApp Bot Development</span>
-                    <span class="skill-tag">Node.js & JavaScript</span>
-                    <span class="skill-tag">AI Integration</span>
-                    <span class="skill-tag">API Development</span>
-                    <span class="skill-tag">Cloud Deployment</span>
-                    <span class="skill-tag">Database Management</span>
-                    <span class="skill-tag">UI/UX Design</span>
-                    <span class="skill-tag">Open Source Projects</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Main Bots Section -->
-        <section class="bots-section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-robot"></i>
-                    My WhatsApp Bots
-                </h2>
-                <p class="section-subtitle">Advanced automation solutions serving thousands of users</p>
-            </div>
-
-            <div class="bots-grid">
-                <!-- FEE-XMD Bot -->
-                <div class="bot-card">
-                    <div class="bot-header">
-                        <div class="bot-icon-large fee-xmd">
-                            <i class="fab fa-whatsapp"></i>
-                        </div>
-                        <div class="bot-badge">Flagship</div>
-                    </div>
-                    <h3 class="bot-title">FEE-XMD</h3>
-                    <p class="bot-description">
-                        Complete WhatsApp automation solution with 200+ features including media downloaders, 
-                        AI chat, games, tools, and educational features.
-                    </p>
-
-                    <div class="bot-features">
-                        <span><i class="fas fa-check"></i> 250+ Commands</span>
-                        <span><i class="fas fa-check"></i> Multi-Platform</span>
-                        <span><i class="fas fa-check"></i> Daily Updates</span>
-                    </div>
-
-                    <div class="bot-stats">
-                        <div class="bot-stat">
-                            <i class="fas fa-users"></i>
-                            <span>25K+ Users</span>
-                        </div>
-                        <div class="bot-stat">
-                            <i class="fas fa-code-branch"></i>
-                            <span>1k+ Forks</span>
-                        </div>
-                    </div>
-
-                    <div class="bot-actions">
-                        <a href="https://github.com/Fred1e/Fee-Xmd" class="btn btn-primary" target="_blank">
-                            <i class="fab fa-github"></i> GitHub
-                        </a>
-                        <a href="https://fee-xmd-pair.onrender.com" class="btn btn-secondary">
-                            <i class="fas fa-cog"></i> Dashboard
-                        </a>
-                    </div>
-                </div>
-
-                <!-- LUCKY-MD Bot -->
-                <div class="bot-card">
-                    <div class="bot-header">
-                        <div class="bot-icon-large lucky-md">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="bot-badge">Popular</div>
-                    </div>
-                    <h3 class="bot-title">LUCKY-MD</h3>
-                    <p class="bot-description">
-                        Modern WhatsApp bot built with JavaScript and Docker. Features AI capabilities, 
-                        media processing, and advanced automation tools.
-                    </p>
-
-                    <div class="bot-features">
-                        <span><i class="fas fa-check"></i> 50+ Modules</span>
-                        <span><i class="fas fa-check"></i> Docker Ready</span>
-                        <span><i class="fas fa-check"></i> AI Chat</span>
-                    </div>
-
-                    <div class="bot-stats">
-                        <div class="bot-stat">
-                            <i class="fas fa-users"></i>
-                            <span>15K+ Users</span>
-                        </div>
-                        <div class="bot-stat">
-                            <i class="fas fa-star"></i>
-                            <span>500+ Stars</span>
-                        </div>
-                    </div>
-
-                    <div class="bot-actions">
-                        <a href="https://github.com/mr-X-force/LUCKY-MD-XFORCE" class="btn btn-primary" target="_blank">
-                            <i class="fab fa-github"></i> GitHub
-                        </a>
-                        <a href="https://lucky-sc.onrender.com" class="btn btn-secondary">
-                            <i class="fas fa-cog"></i> Dashboard
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Quick Actions Section -->
-        <section class="actions-section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-bolt"></i>
-                    Quick Actions
-                </h2>
-                <p class="section-subtitle">Essential tools and quick access links</p>
-            </div>
-
-            <div class="actions-grid">
-                <a href="https://fee-xmd-pair.onrender.com/pair" class="action-card">
-                    <div class="action-icon pair">
-                        <i class="fas fa-link"></i>
-                    </div>
-                    <h3>Pair Bot</h3>
-                    <p>Generate pairing code for WhatsApp</p>
-                </a>
-                
-            <div class="actions-grid">
-                <a href="https://fee-xmd-pair.onrender.com/qr" class="action-card">
-                    <div class="action-icon pair">
-                        <i class="fas fa-link"></i>
-                    </div>
-                    <h3>Scan Qr</h3>
-                    <p>Scan your Qr for WhatsApp</p>
-                </a>
-
-                <a href="https://fezchat.github.io/deploy_fee_xmd" class="action-card">
-                    <div class="action-icon deploy">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <h3>Deploy Bot</h3>
-                    <p>Deploy your own bot instance</p>
-                </a>
-
-                <a href="https://fredi-ai-site.vercel.app" class="action-card" target="_blank">
-                    <div class="action-icon website">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <h3>Website</h3>
-                    <p>Visit main website</p>
-                </a>
-
-                <a href="https://github.com/Fred1e" class="action-card" target="_blank">
-                    <div class="action-icon github">
-                        <i class="fab fa-github"></i>
-                    </div>
-                    <h3>GitHub</h3>
-                    <p>View all projects</p>
-                </a>
-            </div>
-        </section>
-
-        <!-- Social Links -->
-        <section class="social-section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-share-alt"></i>
-                    Connect With Me
-                </h2>
-                <p class="section-subtitle">Join our community and stay updated</p>
-            </div>
-
-            <div class="social-grid">
-                <a href="https://whatsapp.com/channel/0029Vb6mzVF7tkj42VNPrZ3V" class="social-card" target="_blank">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>WhatsApp Channel</span>
-                </a>
-
-                <a href="https://chat.whatsapp.com/KERPI5K0w0L9rzU00QSw40" class="social-card" target="_blank">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>WhatsApp Group</span>
-                </a>
-
-                <a href="https://facebook.com/FrediEzra" class="social-card" target="_blank">
-                    <i class="fab fa-facebook"></i>
-                    <span>Facebook</span>
-                </a>
-
-                <a href="https://instagram.com/frediezra" class="social-card" target="_blank">
-                    <i class="fab fa-instagram"></i>
-                    <span>Instagram</span>
-                </a>
-
-                <a href="https://youtube.com/FrediAI-tech" class="social-card" target="_blank">
-                    <i class="fab fa-youtube"></i>
-                    <span>YouTube</span>
-                </a>
-
-                <a href="mailto:frediezra360@gmail.com" class="social-card">
-                    <i class="fas fa-envelope"></i>
-                    <span>Email</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- Contact Info -->
-        <section class="contact-section">
-            <div class="contact-card">
-                <h3>
-                    <i class="fas fa-headset"></i>
-                    Support & Contact
-                </h3>
-                <div class="contact-info">
-                    <p><i class="fas fa-envelope"></i> frediezra360@gmail.com</p>
-                    <p><i class="fab fa-whatsapp"></i> +255 764 182 801 (Tanzania)</p>
-                    <p><i class="fab fa-whatsapp"></i> +256 752 593 977 (International)</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Arusha, Tanzania</p>
-                </div>
-
-                <div class="contact-buttons">
-                    <a href="mailto:frediezra360@gmail.com" class="btn btn-primary">
-                        <i class="fas fa-envelope"></i> Send Email
-                    </a>
-                    <a href="https://wa.me/255764182801" class="btn btn-success" target="_blank">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-<!-- Scrollable Bottom Navigation -->
-<nav class="bottom-nav" id="bottomNav">
-    <div class="nav-container">
-        <!-- Main Buttons -->
-        <a href="/" class="nav-btn active">
-            <i class="fas fa-home"></i>
-            <span>Dashboard</span>
-        </a>
-        
-        <!-- Categories Buttons -->
-        <a href="./search.html" class="nav-btn">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-        </a>
-        <a href="./ai.html" class="nav-btn">
-            <i class="fas fa-gears"></i>
-            <span>AI Tools</span>
-        </a>
-        <a href="./movie.html" class="nav-btn">
-            <i class="fas fa-film"></i>
-            <span>Movies</span>
-        </a>
-        <a href="./porno.html" class="nav-btn adult">
-            <i class="fas fa-ban"></i>
-            <span>18+ Menu</span>
-            <span class="adult-badge">🔞</span>
-        </a>
-        
-        <!-- More Tools Buttons -->
-        <a href="./dowload.html" class="nav-btn">
-            <i class="fas fa-download"></i>
-            <span>Download</span>
-        </a>
-        <a href="./stalker.html" class="nav-btn">
-            <i class="fas fa-user-secret"></i>
-            <span>Stalker</span>
-        </a>
-        <a href="./fun.html" class="nav-btn">
-            <i class="fas fa-gamepad"></i>
-            <span>Fun</span>
-        </a>
-        <a href="./editing.html" class="nav-btn">
-            <i class="fas fa-edit"></i>
-            <span>Editing</span>
-        </a>
-        
-        <!-- Development Buttons -->
-        <a href="./coding.html" class="nav-btn">
-            <i class="fas fa-code"></i>
-            <span>Coding</span>
-        </a>
-        <a href="./sports.html" class="nav-btn">
-            <i class="fas fa-running"></i>
-            <span>Sports</span>
-        </a>
-        <a href="./kamusi.html" class="nav-btn">
-            <i class="fas fa-book"></i>
-            <span>Dictionary</span>
-        </a>
-        <a href="./bots.html" class="nav-btn">
-            <i class="fas fa-robot"></i>
-            <span>My Bots</span>
-        </a>
-        
-        <!-- Essential Action Buttons -->
-        <a href="pair.html" class="nav-btn action-btn pair">
-            <i class="fas fa-link"></i>
-            <span>Pair Bot</span>
-        </a>
-        <a href="deploy.html" class="nav-btn action-btn deploy">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>Deploy</span>
-        </a>
-    </div>
-    
-    <!-- Navigation Scroll Indicators -->
-    <div class="nav-scroll-indicator left" id="scrollLeft">
-        <i class="fas fa-chevron-left"></i>
-    </div>
-    <div class="nav-scroll-indicator right" id="scrollRight">
-        <i class="fas fa-chevron-right"></i>
-    </div>
-    
-    <!-- Scroll Progress Indicator -->
-    <div class="scroll-progress-indicator">
-        <div class="progress-track">
-            <div class="progress-thumb" id="scrollProgressThumb"></div>
+    <!-- Video Reel Auto-scroll -->
+    <section class="video-reel">
+        <h2>My Work in Action</h2>
+        <div class="reel-container" id="videoReel">
+            <video src="https://files.catbox.moe/g9vsmf.mp4" autoplay muted loop></video>
+            <video src="https://files.catbox.moe/de4qb3.mp4" autoplay muted loop></video>
+            <video src="https://files.catbox.moe/0nqflx.mp4" autoplay muted loop></video>
+            <video src="https://files.catbox.moe/bdbsh9.mp4" autoplay muted loop></video>
+            <video src="https://files.catbox.moe/43t899.mp4" autoplay muted loop></video>
+            <video src="https://files.catbox.moe/yn7h5o.mp4" autoplay muted loop></video>
         </div>
-        <div class="page-indicator" id="pageIndicator">
-            <span id="currentPage">1</span> / <span id="totalPages">5</span>
-        </div>
-    </div>
-</nav>
+    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- Real GitHub Stats from Fred1e and FezChat -->
+    <section class="github-stats" id="projects">
+        <h2><i class="fab fa-github"></i> GitHub Statistics</h2>
+        <div class="stats-container">
+            <div class="stat-card" id="followers">
+                <i class="fas fa-users"></i>
+                <h3>-</h3>
+                <p>Followers</p>
+            </div>
+            <div class="stat-card" id="repos">
+                <i class="fas fa-code-branch"></i>
+                <h3>-</h3>
+                <p>Repositories</p>
+            </div>
+            <div class="stat-card" id="stars">
+                <i class="fas fa-star"></i>
+                <h3>-</h3>
+                <p>Total Stars</p>
+            </div>
+            <div class="stat-card" id="forks">
+                <i class="fas fa-code-fork"></i>
+                <h3>-</h3>
+                <p>Forks</p>
+            </div>
+        </div>
+
+        <h3>Top Projects from Fred1e</h3>
+        <div class="projects-grid" id="fred1e-projects">
+            <!-- JS will populate -->
+        </div>
+
+        <h3>Projects from FezChat</h3>
+        <div class="projects-grid" id="fezchat-projects">
+            <!-- JS will populate -->
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services" id="services">
+        <h2>My Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fab fa-whatsapp"></i>
+                <h3>WhatsApp Bots</h3>
+                <p>Custom bots, Fee-XMD deployment</p>
+                <p class="price">$1 | 2500 TZS | 100 KSH</p>
+                <a href="https://github.com/Fred1e/Fee-xmd" target="_blank" class="btn-small">View Bot</a>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-code"></i>
+                <h3>Web Development</h3>
+                <p>Modern websites, dashboards, PHP/JS</p>
+                <button class="btn-small" onclick="requestService('web')">Request</button>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-robot"></i>
+                <h3>Bot Pairing</h3>
+                <p>Session pairing, deployment help</p>
+                <button class="btn-small" onclick="requestService('pair')">Request</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download App -->
+    <section class="app-download">
+        <div class="app-card">
+            <h3>Download FEE-ONLINE App</h3>
+            <p>Get our Android app with all tools</p>
+            <a href="https://files.catbox.moe/9r77s0.apk" class="btn-download" download>
+                <i class="fas fa-download"></i> Download APK
+            </a>
+        </div>
+    </section>
+
+    <!-- Real-time Rating Message -->
+    <div class="rate-message" id="rateMessage">
+        <i class="fas fa-star"></i>
+        <span>Enjoying my portfolio? Rate it 5 stars!</span>
+        <button onclick="dismissMessage()">Continue</button>
+    </div>
+
+    <!-- Footer with Real Contact -->
+    <footer id="contact">
         <div class="footer-content">
-            <div class="footer-brand">
-                <div class="footer-logo">F</div>
-                <div class="footer-text">
-                    <h3>Fredi AI Tech</h3>
-                    <p>AI & Bot Development</p>
-                </div>
+            <div class="footer-section">
+                <h4>FEE-ONLINE</h4>
+                <p>Developer: Fredi E. Ezra</p>
+                <p>Tanzania | P.O Box null</p>
             </div>
-
-            <div class="footer-links">
-                <a href="https://github.com/Fred1e">GitHub</a>
-                <a href="https://fredi-ai-site.vercel.app">Website</a>
-                <a href="privacy.html">Privacy</a>
-                <a href="terms.html">Terms</a>
+            <div class="footer-section">
+                <h4>Contact Direct</h4>
+                <p><i class="fas fa-envelope"></i> frediezra360@gmail.com</p>
+                <p><i class="fab fa-whatsapp"></i> +255 752 593 977</p>
+                <p><i class="fas fa-phone"></i> +255 752 593 977</p>
             </div>
-
-            <p class="footer-copyright">
-                © 2026 Fredi Ezra. All rights reserved.<br>
-                Arusha, Tanzania | AI Developer & Bot Creator
-            </p>
+            <div class="footer-section">
+                <h4>Links</h4>
+                <p><a href="https://whatsapp.com/channel/0029Vb6mzVF7tkj42VNPrZ3V">WhatsApp Channel</a></p>
+                <p><a href="https://chat.whatsapp.com/FA1GPSjfUQLCyFbquWnRIS">WhatsApp Group</a></p>
+                <p><a href="https://github.com/Fred1e">GitHub Fred1e</a></p>
+                <p><a href="https://github.com/FezChat">GitHub FezChat</a></p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 FEE-ONLINE | Fredi Ezra | All rights reserved
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script src="script.js"></script>
+    <script src="js/github.js"></script>
+    <script>
+        function dismissMessage() {
+            document.getElementById('rateMessage').style.display = 'none';
+        }
+        
+        function requestService(service) {
+            window.location.href = `https://wa.me/255752593977?text=Hello%20Fredi%2C%20I%20need%20${service}%20service`;
+        }
+    </script>
 </body>
 </html>
