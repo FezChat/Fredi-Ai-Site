@@ -1,4 +1,3 @@
-/* ===== RESET & VARIABLES ===== */
 * {
     margin: 0;
     padding: 0;
@@ -68,13 +67,22 @@
 }
 
 /* ===== BASE STYLES ===== */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
 body {
     font-family: var(--font-primary);
     background: var(--bg-dark);
     color: var(--text-light);
     line-height: 1.6;
     min-height: 100vh;
-    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 a {
@@ -92,16 +100,18 @@ button {
 .auth-page {
     background: radial-gradient(circle at 10% 20%, #1a2633, var(--bg-darker));
     min-height: 100vh;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    padding: 2rem 1rem;
 }
 
 .auth-page::before {
     content: '';
-    position: absolute;
+    position: fixed;
     width: 150%;
     height: 150%;
     background: repeating-linear-gradient(
@@ -112,6 +122,8 @@ button {
         rgba(0, 194, 186, 0.02) 40px
     );
     animation: backgroundMove 20s linear infinite;
+    pointer-events: none;
+    z-index: 0;
 }
 
 @keyframes backgroundMove {
@@ -122,19 +134,22 @@ button {
 .auth-container {
     width: 100%;
     max-width: 480px;
-    padding: 2rem;
+    padding: 1rem;
     position: relative;
     z-index: 10;
+    margin: auto;
 }
 
 .auth-card {
     background: rgba(21, 26, 36, 0.95);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-dark);
     border-radius: var(--radius-xl);
-    padding: 3rem 2.5rem;
+    padding: 2.5rem 2rem;
     box-shadow: var(--shadow-xl), 0 0 0 1px var(--primary-glow);
     animation: slideUp 0.6s ease;
+    width: 100%;
 }
 
 @keyframes slideUp {
@@ -149,56 +164,57 @@ button {
 }
 
 .auth-logo {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     border: 3px solid var(--primary);
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 1.2rem;
     display: block;
     box-shadow: var(--shadow-glow);
     object-fit: cover;
 }
 
 .auth-card h2 {
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 800;
     text-align: center;
     background: linear-gradient(135deg, #fff, var(--primary-light));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .auth-subtitle {
     text-align: center;
     color: var(--text-gray);
-    margin-bottom: 2rem;
+    margin-bottom: 1.8rem;
+    font-size: 0.95rem;
 }
 
 /* Form Groups */
 .form-group {
     position: relative;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
 }
 
 .form-group i {
     position: absolute;
-    left: 1.5rem;
+    left: 1.2rem;
     top: 50%;
     transform: translateY(-50%);
     color: var(--primary);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     z-index: 10;
 }
 
 .form-group input {
     width: 100%;
-    padding: 1rem 1rem 1rem 3.2rem;
+    padding: 0.9rem 1rem 0.9rem 3rem;
     background: var(--bg-input);
     border: 2px solid transparent;
     border-radius: var(--radius-full);
     color: var(--text-light);
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: var(--transition-normal);
 }
 
@@ -211,6 +227,7 @@ button {
 
 .form-group input::placeholder {
     color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 /* Form Options */
@@ -218,7 +235,7 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 1rem 0 2rem;
+    margin: 0.8rem 0 1.5rem;
 }
 
 .remember {
@@ -227,17 +244,18 @@ button {
     gap: 0.5rem;
     color: var(--text-gray);
     cursor: pointer;
+    font-size: 0.9rem;
 }
 
 .remember input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     accent-color: var(--primary);
 }
 
 .forgot-password {
     color: var(--primary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: var(--transition-fast);
 }
 
@@ -251,15 +269,16 @@ button {
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    margin: 1.5rem 0;
+    margin: 1.2rem 0;
     color: var(--text-gray);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .terms input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     accent-color: var(--primary);
+    flex-shrink: 0;
 }
 
 .terms a {
@@ -270,13 +289,13 @@ button {
 /* Buttons */
 .btn-auth {
     width: 100%;
-    padding: 1rem;
+    padding: 0.9rem;
     background: var(--gradient-primary);
     border: none;
     border-radius: var(--radius-full);
     color: var(--bg-darker);
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: var(--transition-normal);
     position: relative;
@@ -313,14 +332,15 @@ button {
 /* Auth Footer */
 .auth-footer {
     text-align: center;
-    margin-top: 2rem;
-    padding-top: 2rem;
+    margin-top: 1.8rem;
+    padding-top: 1.5rem;
     border-top: 1px solid var(--border-dark);
 }
 
 .auth-footer p {
     color: var(--text-gray);
-    margin: 0.5rem 0;
+    margin: 0.4rem 0;
+    font-size: 0.9rem;
 }
 
 .auth-footer a {
@@ -335,7 +355,7 @@ button {
 }
 
 .demo-note {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     font-style: italic;
 }
@@ -344,24 +364,32 @@ button {
 .dashboard-wrapper {
     display: flex;
     min-height: 100vh;
+    height: 100%;
+    width: 100%;
     background: var(--bg-dark);
+    position: relative;
 }
 
-/* Sidebar */
+/* Sidebar - Fixed but scrollable */
 .dashboard-sidebar {
     width: 300px;
     background: var(--bg-darker);
     border-right: 1px solid var(--border-dark);
     position: fixed;
+    top: 0;
+    left: 0;
     height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 100;
     transition: var(--transition-normal);
+    display: flex;
+    flex-direction: column;
 }
 
 /* Custom Scrollbar */
 .dashboard-sidebar::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
 }
 
 .dashboard-sidebar::-webkit-scrollbar-track {
@@ -374,35 +402,37 @@ button {
 }
 
 .sidebar-header {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1.5rem 1rem;
     text-align: center;
     border-bottom: 1px solid var(--border-dark);
+    flex-shrink: 0;
 }
 
 .sidebar-header img {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    border: 3px solid var(--primary);
-    margin-bottom: 1rem;
+    border: 2px solid var(--primary);
+    margin-bottom: 0.8rem;
     box-shadow: var(--shadow-glow);
 }
 
 .sidebar-header h3 {
     color: var(--primary);
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
 }
 
 /* User Profile Sidebar */
 .user-profile-sidebar {
     background: var(--bg-card);
-    margin: 1.5rem;
-    padding: 1.5rem;
+    margin: 1.2rem 1rem;
+    padding: 1.2rem;
     border-radius: var(--radius-lg);
     text-align: center;
     border: 1px solid var(--border-dark);
     transition: var(--transition-normal);
+    flex-shrink: 0;
 }
 
 .user-profile-sidebar:hover {
@@ -411,18 +441,18 @@ button {
 }
 
 .user-avatar-large {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     background: var(--gradient-primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1rem;
-    font-size: 2.2rem;
+    margin: 0 auto 0.8rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--bg-darker);
-    border: 3px solid var(--primary-light);
+    border: 2px solid var(--primary-light);
     position: relative;
     overflow: hidden;
 }
@@ -439,44 +469,48 @@ button {
 
 .user-profile-sidebar h4 {
     color: var(--text-light);
-    margin-bottom: 0.3rem;
-    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+    font-size: 1.1rem;
 }
 
 .user-profile-sidebar p {
     color: var(--text-gray);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin: 0.2rem 0;
 }
 
 /* Sidebar Navigation */
 .sidebar-nav {
-    padding: 1rem;
+    padding: 0.5rem 0.8rem;
+    flex: 1;
+    overflow-y: auto;
 }
 
 .sidebar-nav a {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
+    gap: 0.8rem;
+    padding: 0.8rem 1.2rem;
     color: var(--text-gray);
     border-radius: var(--radius-md);
     transition: var(--transition-normal);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     font-weight: 500;
+    font-size: 0.95rem;
 }
 
 .sidebar-nav a i {
-    width: 24px;
-    font-size: 1.2rem;
+    width: 22px;
+    font-size: 1.1rem;
     color: var(--primary);
     transition: var(--transition-normal);
+    text-align: center;
 }
 
 .sidebar-nav a:hover {
     background: rgba(0, 194, 186, 0.1);
     color: var(--text-light);
-    transform: translateX(5px);
+    transform: translateX(3px);
 }
 
 .sidebar-nav a:hover i {
@@ -497,8 +531,8 @@ button {
 /* Logout Button */
 .logout-btn-sidebar {
     width: calc(100% - 2rem);
-    margin: 2rem 1rem;
-    padding: 1rem;
+    margin: 1rem 1rem 1.5rem;
+    padding: 0.8rem;
     background: transparent;
     border: 2px solid var(--error);
     color: var(--error);
@@ -507,9 +541,11 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.8rem;
+    gap: 0.6rem;
     transition: var(--transition-normal);
     cursor: pointer;
+    font-size: 0.95rem;
+    flex-shrink: 0;
 }
 
 .logout-btn-sidebar:hover {
@@ -519,32 +555,38 @@ button {
     box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
 }
 
-/* Main Content */
+/* Main Content - Scrollable */
 .dashboard-main {
     flex: 1;
     margin-left: 300px;
     padding: 2rem;
     background: var(--bg-dark);
+    min-height: 100vh;
+    height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* Top Bar */
+/* Top Bar - Sticky but not covering */
 .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--bg-card);
-    padding: 1.2rem 2rem;
+    padding: 1rem 2rem;
     border-radius: var(--radius-lg);
     margin-bottom: 2rem;
     border: 1px solid var(--border-dark);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     position: sticky;
     top: 1rem;
     z-index: 90;
+    width: 100%;
 }
 
 .top-bar h1 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: var(--text-light);
 }
 
@@ -556,14 +598,14 @@ button {
 .top-bar-actions {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.2rem;
 }
 
 .notification-btn {
     background: transparent;
     border: none;
     color: var(--text-gray);
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     cursor: pointer;
     position: relative;
     transition: var(--transition-fast);
@@ -579,8 +621,8 @@ button {
     position: absolute;
     top: 0;
     right: 0;
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     background: var(--primary);
     border-radius: 50%;
     animation: pulse 2s infinite;
@@ -598,8 +640,8 @@ button {
 }
 
 .profile-dropdown img {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 2px solid var(--primary);
     transition: var(--transition-fast);
@@ -612,13 +654,13 @@ button {
 
 .profile-menu {
     position: absolute;
-    top: 60px;
+    top: 50px;
     right: 0;
     background: var(--bg-card);
     border: 1px solid var(--border-dark);
     border-radius: var(--radius-lg);
     padding: 0.5rem;
-    min-width: 200px;
+    min-width: 180px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
@@ -637,10 +679,11 @@ button {
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    padding: 0.8rem 1rem;
+    padding: 0.7rem 1rem;
     color: var(--text-gray);
     border-radius: var(--radius-md);
     transition: var(--transition-fast);
+    font-size: 0.9rem;
 }
 
 .profile-menu a:hover {
@@ -649,22 +692,24 @@ button {
 }
 
 .profile-menu a i {
-    width: 20px;
+    width: 18px;
     color: var(--primary);
+    font-size: 1rem;
 }
 
 /* Rate Banner */
 .rate-banner {
     background: linear-gradient(145deg, #1a2633, #0f1a24);
     border-radius: var(--radius-full);
-    padding: 1.2rem 2rem;
+    padding: 1rem 1.8rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2rem;
-    border-left: 6px solid var(--primary);
+    border-left: 4px solid var(--primary);
     animation: glowPulse 2s infinite alternate;
     box-shadow: var(--shadow-md);
+    width: 100%;
 }
 
 @keyframes glowPulse {
@@ -674,7 +719,7 @@ button {
 
 .rate-banner i {
     color: #ffc107;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-right: 1rem;
 }
 
@@ -682,16 +727,19 @@ button {
     flex: 1;
     color: var(--text-light);
     font-weight: 500;
+    font-size: 0.95rem;
 }
 
 .rate-banner button {
     background: var(--primary);
     border: none;
-    padding: 0.7rem 2rem;
+    padding: 0.6rem 1.8rem;
     border-radius: var(--radius-full);
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition-fast);
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .rate-banner button:hover {
@@ -702,19 +750,21 @@ button {
 /* Video Reel */
 .video-reel-dashboard {
     margin-bottom: 2rem;
+    width: 100%;
 }
 
 .reel-scroll {
     display: flex;
     gap: 1rem;
     overflow-x: auto;
-    padding: 1rem 0;
+    padding: 0.5rem 0 1rem;
     scrollbar-width: thin;
     scrollbar-color: var(--primary) var(--bg-darker);
+    width: 100%;
 }
 
 .reel-scroll::-webkit-scrollbar {
-    height: 8px;
+    height: 6px;
 }
 
 .reel-scroll::-webkit-scrollbar-track {
@@ -728,8 +778,8 @@ button {
 }
 
 .reel-scroll video {
-    min-width: 320px;
-    height: 200px;
+    min-width: 280px;
+    height: 170px;
     border-radius: var(--radius-lg);
     border: 2px solid var(--primary);
     object-fit: cover;
@@ -744,24 +794,26 @@ button {
 /* Quick Service Grid */
 .quick-service-grid {
     margin-bottom: 2rem;
+    width: 100%;
 }
 
 .quick-service-grid h2 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
     color: var(--primary);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
 }
 
 .service-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 1rem;
+    width: 100%;
 }
 
 .service-card-dash {
     background: var(--bg-card);
     border-radius: var(--radius-lg);
-    padding: 1.8rem 1rem;
+    padding: 1.5rem 0.8rem;
     text-align: center;
     text-decoration: none;
     color: var(--text-light);
@@ -770,17 +822,17 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.6rem;
 }
 
 .service-card-dash:hover {
     border-color: var(--primary);
-    transform: translateY(-10px);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-glow);
 }
 
 .service-card-dash i {
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: var(--primary);
     transition: var(--transition-normal);
 }
@@ -792,40 +844,45 @@ button {
 
 .service-card-dash span {
     font-weight: 600;
+    font-size: 0.95rem;
 }
 
 /* GitHub Dashboard Section */
 .github-dashboard {
     background: var(--bg-card);
     border-radius: var(--radius-xl);
-    padding: 2rem;
+    padding: 1.8rem;
     margin-bottom: 2rem;
     border: 1px solid var(--border-dark);
+    width: 100%;
 }
 
 .github-dashboard h2 {
     color: var(--primary);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    font-size: 1.4rem;
 }
 
 .github-search {
     display: flex;
-    gap: 1rem;
-    margin: 1.5rem 0;
+    gap: 0.8rem;
+    margin: 1.2rem 0;
+    width: 100%;
 }
 
 .github-search input {
     flex: 1;
-    padding: 1rem 1.5rem;
+    padding: 0.9rem 1.5rem;
     background: var(--bg-input);
     border: 2px solid transparent;
     border-radius: var(--radius-full);
     color: var(--text-light);
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: var(--transition-normal);
+    min-width: 0;
 }
 
 .github-search input:focus {
@@ -835,15 +892,16 @@ button {
 }
 
 .github-search button {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     background: var(--gradient-primary);
     border: none;
     border-radius: 50%;
     color: var(--bg-darker);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: var(--transition-normal);
+    flex-shrink: 0;
 }
 
 .github-search button:hover {
@@ -854,28 +912,30 @@ button {
 /* Projects Grid */
 .projects-dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+    width: 100%;
 }
 
 .project-card {
     background: var(--bg-surface);
     border-radius: var(--radius-lg);
-    padding: 1.5rem;
+    padding: 1.3rem;
     border: 1px solid var(--border-dark);
     transition: var(--transition-normal);
+    height: fit-content;
 }
 
 .project-card:hover {
     border-color: var(--primary);
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-glow);
 }
 
 .project-card h4 {
-    margin-bottom: 0.8rem;
-    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
 }
 
 .project-card h4 a {
@@ -891,18 +951,19 @@ button {
 
 .project-card p {
     color: var(--text-gray);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    line-height: 1.5;
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
 }
 
 .repo-stats {
     display: flex;
-    gap: 1.5rem;
+    gap: 1.2rem;
     color: var(--text-gray);
-    font-size: 0.9rem;
-    padding-top: 0.8rem;
+    font-size: 0.85rem;
+    padding-top: 0.6rem;
     border-top: 1px solid var(--border-dark);
+    flex-wrap: wrap;
 }
 
 .repo-stats span {
@@ -913,32 +974,36 @@ button {
 
 .repo-stats i {
     color: var(--primary);
+    font-size: 0.9rem;
 }
 
 .loading {
     text-align: center;
     padding: 2rem;
     color: var(--text-gray);
+    width: 100%;
 }
 
 /* Request Section */
 .request-section {
     background: var(--bg-card);
     border-radius: var(--radius-xl);
-    padding: 2rem;
+    padding: 1.8rem;
     text-align: center;
     margin-top: 2rem;
+    width: 100%;
 }
 
 .request-section h3 {
     color: var(--primary);
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    margin-bottom: 0.3rem;
 }
 
 .request-section p {
     color: var(--text-gray);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
 }
 
 .request-methods {
@@ -949,7 +1014,7 @@ button {
 }
 
 .request-methods button {
-    padding: 1rem 2.5rem;
+    padding: 0.9rem 2rem;
     border: none;
     border-radius: var(--radius-full);
     font-weight: 600;
@@ -957,8 +1022,8 @@ button {
     transition: var(--transition-normal);
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    font-size: 1rem;
+    gap: 0.6rem;
+    font-size: 0.95rem;
 }
 
 .request-methods button:nth-child(1) {
@@ -977,50 +1042,54 @@ button {
 }
 
 .request-methods button:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Downloader Page Specific */
 .page-header {
     background: linear-gradient(145deg, #1a2633, #0f1a24);
     border-radius: var(--radius-xl);
-    padding: 2rem;
+    padding: 1.8rem;
     text-align: center;
     margin-bottom: 2rem;
+    width: 100%;
 }
 
 .page-header h1 {
     color: var(--primary);
-    font-size: 2.2rem;
-    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
 }
 
 .page-header h1 i {
-    margin-right: 1rem;
+    margin-right: 0.8rem;
 }
 
 .page-header p {
     color: var(--text-gray);
+    font-size: 0.95rem;
 }
 
 .url-input-section {
     display: flex;
     gap: 1rem;
-    margin-bottom: 3rem;
-    max-width: 800px;
+    margin-bottom: 2.5rem;
+    max-width: 700px;
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
 }
 
 .url-input-section input {
     flex: 1;
-    padding: 1.2rem 1.5rem;
+    padding: 1rem 1.5rem;
     background: var(--bg-input);
     border: 2px solid transparent;
     border-radius: var(--radius-full);
     color: var(--text-light);
-    font-size: 1rem;
+    font-size: 0.95rem;
+    min-width: 0;
 }
 
 .url-input-section input:focus {
@@ -1030,7 +1099,7 @@ button {
 }
 
 .url-input-section button {
-    padding: 1.2rem 2.5rem;
+    padding: 1rem 2rem;
     background: var(--gradient-primary);
     border: none;
     border-radius: var(--radius-full);
@@ -1040,7 +1109,9 @@ button {
     transition: var(--transition-normal);
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    white-space: nowrap;
 }
 
 .url-input-section button:hover {
@@ -1050,15 +1121,16 @@ button {
 
 .platform-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2.5rem;
+    width: 100%;
 }
 
 .platform-card {
     background: var(--bg-card);
     border-radius: var(--radius-xl);
-    padding: 2rem 1rem;
+    padding: 1.8rem 0.8rem;
     text-align: center;
     border: 1px solid var(--border-dark);
     transition: var(--transition-normal);
@@ -1067,14 +1139,14 @@ button {
 
 .platform-card:hover {
     border-color: var(--primary);
-    transform: translateY(-10px);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-glow);
 }
 
 .platform-card i {
-    font-size: 3.5rem;
+    font-size: 3rem;
     color: var(--primary);
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     transition: var(--transition-normal);
 }
 
@@ -1085,24 +1157,27 @@ button {
 
 .platform-card h3 {
     color: var(--text-light);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
+    font-size: 1.1rem;
 }
 
 .platform-card p {
     color: var(--text-gray);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .download-history {
     background: var(--bg-card);
     border-radius: var(--radius-xl);
-    padding: 2rem;
+    padding: 1.8rem;
     margin-top: 2rem;
+    width: 100%;
 }
 
 .download-history h3 {
     color: var(--primary);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
+    font-size: 1.3rem;
 }
 
 .history-list {
@@ -1114,7 +1189,7 @@ button {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem;
+    padding: 0.8rem;
     border-bottom: 1px solid var(--border-dark);
     transition: var(--transition-fast);
 }
@@ -1125,24 +1200,28 @@ button {
 
 .history-item i {
     color: var(--primary);
-    width: 30px;
-    font-size: 1.2rem;
+    width: 25px;
+    font-size: 1.1rem;
+    text-align: center;
 }
 
 .history-url {
     flex: 1;
     color: var(--text-light);
+    font-size: 0.9rem;
 }
 
 .history-date {
     color: var(--text-gray);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
 }
 
 .no-history {
     text-align: center;
     color: var(--text-gray);
-    padding: 2rem;
+    padding: 1.5rem;
+    font-size: 0.9rem;
 }
 
 /* Animations */
@@ -1154,7 +1233,7 @@ button {
 @keyframes slideInLeft {
     from {
         opacity: 0;
-        transform: translateX(-30px);
+        transform: translateX(-20px);
     }
     to {
         opacity: 1;
@@ -1165,7 +1244,7 @@ button {
 @keyframes slideInRight {
     from {
         opacity: 0;
-        transform: translateX(30px);
+        transform: translateX(20px);
     }
     to {
         opacity: 1;
@@ -1174,10 +1253,15 @@ button {
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+    .projects-dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+}
+
 @media (max-width: 1024px) {
     .dashboard-sidebar {
-        width: 80px;
-        overflow: visible;
+        width: 70px;
     }
     
     .sidebar-header h3,
@@ -1189,45 +1273,61 @@ button {
     }
     
     .user-avatar-large {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
     }
     
     .sidebar-nav a {
         justify-content: center;
-        padding: 1rem;
+        padding: 0.8rem;
     }
     
     .sidebar-nav a i {
         margin: 0;
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
     
     .logout-btn-sidebar {
         width: calc(100% - 1rem);
         margin: 1rem 0.5rem;
-        padding: 0.8rem;
+        padding: 0.7rem;
     }
     
     .logout-btn-sidebar i {
         margin: 0;
+        font-size: 1.2rem;
     }
     
     .dashboard-main {
-        margin-left: 80px;
+        margin-left: 70px;
+        padding: 1.5rem;
     }
 }
 
 @media (max-width: 768px) {
     .auth-card {
-        padding: 2rem 1.5rem;
+        padding: 2rem 1.2rem;
+    }
+    
+    .auth-logo {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .auth-card h2 {
+        font-size: 1.6rem;
+    }
+    
+    .dashboard-main {
+        padding: 1rem;
     }
     
     .top-bar {
         flex-direction: column;
         gap: 1rem;
         text-align: center;
+        padding: 1rem;
     }
     
     .service-cards {
@@ -1250,11 +1350,26 @@ button {
     .platform-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    .github-search {
+        flex-wrap: wrap;
+    }
+    
+    .github-search button {
+        width: 100%;
+        border-radius: var(--radius-full);
+    }
 }
 
 @media (max-width: 480px) {
+    .dashboard-sidebar {
+        width: 0;
+        display: none;
+    }
+    
     .dashboard-main {
-        padding: 1rem;
+        margin-left: 0;
+        padding: 0.8rem;
     }
     
     .service-cards {
@@ -1266,14 +1381,28 @@ button {
     }
     
     .reel-scroll video {
-        min-width: 250px;
-        height: 150px;
+        min-width: 200px;
+        height: 130px;
     }
     
     .rate-banner {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.8rem;
         text-align: center;
+        padding: 1rem;
+    }
+    
+    .rate-banner button {
+        width: 100%;
+    }
+    
+    .projects-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .repo-stats {
+        flex-wrap: wrap;
+        gap: 0.8rem;
     }
 }
 
@@ -1301,4 +1430,53 @@ button {
 
 .animate-slide-right {
     animation: slideInRight 0.5s ease;
+}
+
+/* Fix for mobile scrolling */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .auth-page {
+        padding: 1rem;
+        align-items: flex-start;
+    }
+    
+    .auth-container {
+        padding: 0.5rem;
+    }
+    
+    .dashboard-wrapper {
+        flex-direction: column;
+    }
+    
+    .dashboard-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+    }
+    
+    .dashboard-main {
+        margin-left: 0;
+    }
+}
+
+/* Fix for very small screens */
+@media (max-width: 360px) {
+    .auth-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .form-group input {
+        padding: 0.8rem 1rem 0.8rem 2.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn-auth {
+        padding: 0.8rem;
+    }
 }
