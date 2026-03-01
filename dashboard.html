@@ -17,9 +17,13 @@
             </div>
             
             <div class="user-profile-sidebar" id="userProfileSidebar">
-                <div class="user-avatar-large" id="sidebarAvatar">FE</div>
-                <h4 id="sidebarName">Fredi Ezra</h4>
-                <p id="sidebarEmail">frediezra360@gmail.com</p>
+                <div class="user-avatar-large" id="sidebarAvatar">
+                    <img src="" alt="Profile" id="profileImage" style="display: none;">
+                    <span id="avatarInitials">FE</span>
+                </div>
+                <h4 id="sidebarName">Loading...</h4>
+                <p id="sidebarEmail">Loading...</p>
+                <p id="sidebarPhone"></p>
             </div>
             
             <nav class="sidebar-nav">
@@ -36,7 +40,7 @@
                 <a href="menus/dictionary.html"><i class="fas fa-spell-check"></i> Dictionary</a>
             </nav>
             
-            <button class="logout-btn-sidebar" onclick="logout()">
+            <button class="logout-btn-sidebar" onclick="handleLogout()">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </aside>
@@ -45,19 +49,25 @@
         <main class="dashboard-main">
             <!-- Top Bar -->
             <div class="top-bar">
-                <h1>Welcome Back, <span id="welcomeName">Fredi</span>!</h1>
+                <h1>Welcome Back, <span id="welcomeName">...</span>!</h1>
                 <div class="top-bar-actions">
                     <button class="notification-btn"><i class="fas fa-bell"></i></button>
-                    <div class="profile-dropdown">
+                    <div class="profile-dropdown" onclick="toggleProfileMenu()">
                         <img src="https://files.catbox.moe/el0qlh.jpeg" alt="Profile" id="profileThumb">
+                        <div class="profile-menu" id="profileMenu">
+                            <a href="#" onclick="viewProfile()"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" onclick="editProfile()"><i class="fas fa-edit"></i> Edit Profile</a>
+                            <a href="#" onclick="changePassword()"><i class="fas fa-key"></i> Change Password</a>
+                            <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Rate Banner (Real-time) -->
+            <!-- Rate Banner -->
             <div class="rate-banner" id="rateBanner">
                 <i class="fas fa-star"></i>
-                <span id="rotatingMessage">How would you rate our service?</span>
+                <span id="rotatingMessage">How would you rate FEE-ONLINE?</span>
                 <button onclick="dismissBanner()">Continue</button>
             </div>
             
@@ -73,7 +83,7 @@
                 </div>
             </div>
             
-            <!-- Quick Service Grid -->
+            <!-- Quick Services -->
             <div class="quick-service-grid">
                 <h2>Quick Services</h2>
                 <div class="service-cards">
@@ -100,7 +110,7 @@
                 </div>
             </div>
             
-            <!-- GitHub Projects Section with Search -->
+            <!-- GitHub Projects -->
             <div class="github-dashboard">
                 <h2><i class="fab fa-github"></i> GitHub Projects</h2>
                 <div class="github-search">
@@ -108,30 +118,14 @@
                     <button onclick="searchGithubUser()"><i class="fas fa-search"></i></button>
                 </div>
                 <div class="projects-dashboard-grid" id="dashboardProjects">
-                    <!-- JS will populate -->
+                    <div class="loading">Loading projects...</div>
                 </div>
             </div>
             
-            <!-- WhatsApp Bot Info -->
-            <div class="bot-info-dashboard">
-                <div class="bot-info-content">
-                    <h3>Fee-XMD WhatsApp Bot</h3>
-                    <p>Price: <strong>$1</strong> (2500 TZS / 100 KSH)</p>
-                    <p>Deploy from: <a href="https://github.com/Fred1e/Fee-xmd" target="_blank">github.com/Fred1e/Fee-xmd</a></p>
-                    <div class="bot-actions">
-                        <button class="btn-request" onclick="requestService('bot')">
-                            <i class="fab fa-whatsapp"></i> Request Bot
-                        </button>
-                        <button class="btn-pair" onclick="requestService('pair')">
-                            <i class="fas fa-link"></i> Pair Code
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Request Service via Email/WhatsApp -->
+            <!-- Service Request -->
             <div class="request-section">
                 <h3>Request Service</h3>
+                <p>Contact Fredi Ezra directly:</p>
                 <div class="request-methods">
                     <button onclick="requestVia('email')">
                         <i class="fas fa-envelope"></i> Email
@@ -147,8 +141,8 @@
         </main>
     </div>
     
-    <script src="../js/auth.js"></script>
-    <script src="../js/github.js"></script>
-    <script src="../js/dashboard.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/github.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
