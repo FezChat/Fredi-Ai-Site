@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloader - FEE-ONLINE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <img src="https://files.catbox.moe/el0qlh.jpeg" alt="FEE-ONLINE">
+                <h3>FEE-ONLINE</h3>
+            </div>
+            
+            <div class="user-profile-sidebar">
+                <div class="user-avatar-large">
+                    <span id="avatarInitials">FE</span>
+                </div>
+                <h4 id="sidebarName">Loading...</h4>
+                <p id="sidebarEmail">Loading...</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="../dashboard.html"><i class="fas fa-home"></i> Home</a>
+                <a href="movie.html"><i class="fas fa-film"></i> Movie</a>
+                <a href="downloader.html" class="active"><i class="fas fa-download"></i> Downloader</a>
+                <a href="ai.html"><i class="fas fa-robot"></i> AI Tools</a>
+                <a href="search.html"><i class="fas fa-search"></i> Search</a>
+                <a href="stalker.html"><i class="fas fa-user-secret"></i> Stalker</a>
+                <a href="fun.html"><i class="fas fa-gamepad"></i> Fun</a>
+                <a href="editing.html"><i class="fas fa-pen"></i> Editing</a>
+                <a href="coding.html"><i class="fas fa-code"></i> Coding</a>
+                <a href="sports.html"><i class="fas fa-futbol"></i> Sports</a>
+                <a href="dictionary.html"><i class="fas fa-spell-check"></i> Dictionary</a>
+            </nav>
+            
+            <button class="logout-btn-sidebar" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="page-header">
+                <h1><i class="fas fa-download"></i> Media Downloader</h1>
+                <p>Download from any platform - Available for logged in users only</p>
+            </div>
+            
+            <div class="download-container">
+                <!-- URL Input -->
+                <div class="url-input-section">
+                    <input type="text" id="videoUrl" placeholder="Paste video/audio URL here...">
+                    <button onclick="processDownload()"><i class="fas fa-download"></i> Download</button>
+                </div>
+                
+                <!-- Platform Grid -->
+                <div class="platform-grid">
+                    <div class="platform-card" onclick="setPlatform('youtube')">
+                        <i class="fab fa-youtube"></i>
+                        <h3>YouTube</h3>
+                        <p>MP4, MP3, Playlists</p>
+                    </div>
+                    <div class="platform-card" onclick="setPlatform('instagram')">
+                        <i class="fab fa-instagram"></i>
+                        <h3>Instagram</h3>
+                        <p>Posts, Reels, Stories</p>
+                    </div>
+                    <div class="platform-card" onclick="setPlatform('facebook')">
+                        <i class="fab fa-facebook"></i>
+                        <h3>Facebook</h3>
+                        <p>Videos, Reels</p>
+                    </div>
+                    <div class="platform-card" onclick="setPlatform('tiktok')">
+                        <i class="fab fa-tiktok"></i>
+                        <h3>TikTok</h3>
+                        <p>Videos, No Watermark</p>
+                    </div>
+                    <div class="platform-card" onclick="setPlatform('spotify')">
+                        <i class="fab fa-spotify"></i>
+                        <h3>Spotify</h3>
+                        <p>Tracks, Playlists</p>
+                    </div>
+                    <div class="platform-card" onclick="setPlatform('twitter')">
+                        <i class="fab fa-twitter"></i>
+                        <h3>Twitter/X</h3>
+                        <p>Videos, GIFs</p>
+                    </div>
+                </div>
+                
+                <!-- Download History (for logged in user) -->
+                <div class="download-history">
+                    <h3>Your Download History</h3>
+                    <div class="history-list" id="downloadHistory">
+                        <!-- History will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="../js/auth.js"></script>
+    <script src="../js/menu-auth.js"></script>
+    <script>
+        let currentPlatform = '';
+        
+        function setPlatform(platform) {
+            currentPlatform = platform;
+            document.getElementById('videoUrl').placeholder = `Paste ${platform} URL here...`;
+        }
+        
+        function processDownload() {
+            const url = document.getElementById('videoUrl').value;
+            if (!url) {
+                alert('Please paste a URL first');
+                return;
+            }
+            
+            alert(`Download started for ${currentPlatform || 'video'}!\nNote: This is a demo. Real download would start.`);
+            
+            // Save to history (using user-specific storage)
+            const user = Auth.getCurrentUser();
+            if (user) {
+                const historyKey = `downloads_${user.username}`;
+                const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+                history.unshift({
+                    url: url,
+                    platform: currentPlatform || 'unknown',
+                    date: new Date().toISOString()
+                });
+                localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 10))); // Keep last 10
+                loadHistory();
+            }
+        }
+        
+        function loadHistory() {
+            const user = Auth.getCurrentUser();
+            if (!user) return;
+            
+            const historyKey = `downloads_${user.username}`;
+            const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+            const historyList = document.getElementById('downloadHistory');
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<p class="no-history">No downloads yet</p>';
+                return;
+            }
+            
+            historyList.innerHTML = history.map(item => `
+                <div class="history-item">
+                    <i class="fab fa-${item.platform}"></i>
+                    <span class="history-url">${item.url.substring(0, 30)}...</span>
+                    <span class="history-date">${new Date(item.date).toLocaleDateString()}</span>
+                </div>
+            `).join('');
+        }
+        
+        // Load history on page load
+        document.addEventListener('DOMContentLoaded', loadHistory);
+    </script>
+</body>
+</html>
