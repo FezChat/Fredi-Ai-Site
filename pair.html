@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Pairing Code - FEE-XMD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0d1117 0%, #1a212b 100%);
+            color: #f0f3fa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .pair-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .pair-card {
+            background: rgba(26, 33, 43, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 2rem;
+            border: 1px solid #2f3b4e;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid #b085f5;
+            margin-bottom: 1rem;
+            object-fit: cover;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(176, 133, 245, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(176, 133, 245, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(176, 133, 245, 0); }
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #b085f5, #5f9ea0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #8b9bb5;
+            font-size: 1rem;
+        }
+
+        .input-section {
+            margin-bottom: 2rem;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b085f5;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.8rem;
+            background: #0d151f;
+            border: 1px solid #2a3b50;
+            border-radius: 60px;
+            padding: 0.3rem;
+        }
+
+        .input-group input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .input-group input::placeholder {
+            color: #4a5b70;
+        }
+
+        .input-group button {
+            background: #b085f5;
+            border: none;
+            border-radius: 50px;
+            padding: 0 2rem;
+            color: #0b0f15;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .input-group button:hover {
+            background: #c7a9ff;
+            transform: scale(1.02);
+        }
+
+        .input-group button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .info-box {
+            background: #0d151f;
+            border-radius: 30px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #2a3b50;
+            font-size: 0.9rem;
+            color: #b4c8e0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .info-box i {
+            color: #b085f5;
+            font-size: 1.5rem;
+        }
+
+        .code-display {
+            background: linear-gradient(145deg, #0d151f, #1a2533);
+            border-radius: 40px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            border: 2px solid #b085f5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(176, 133, 245, 0.1),
+                transparent
+            );
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .code-label {
+            color: #8b9bb5;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        #pairingCode {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 10px;
+            color: #b085f5;
+            text-shadow: 0 0 20px rgba(176, 133, 245, 0.5);
+            margin: 1rem 0;
+            word-break: break-word;
+        }
+
+        .copy-btn {
+            background: #b085f5;
+            border: none;
+            border-radius: 40px;
+            padding: 1rem 2rem;
+            color: #0b0f15;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .copy-btn:hover {
+            background: #c7a9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(176, 133, 245, 0.3);
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .action-btn {
+            background: #1e2a38;
+            border: 1px solid #2a3b50;
+            border-radius: 30px;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .action-btn:hover {
+            background: #2a384a;
+            border-color: #b085f5;
+            transform: translateY(-2px);
+        }
+
+        .action-btn i {
+            color: #b085f5;
+            font-size: 1.2rem;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #5a6b7c;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #b085f5;
+            text-decoration: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(176, 133, 245, 0.3);
+            border-radius: 50%;
+            border-top-color: #b085f5;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1e2a38;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid #b085f5;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .pair-card {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            #pairingCode {
+                font-size: 2rem;
+                letter-spacing: 5px;
+            }
+
+            .buttons-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                flex-direction: column;
+                border-radius: 30px;
+            }
+
+            .input-group button {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pair-container">
+        <div class="pair-card">
+            <!-- Header -->
+            <div class="header">
+                <img src="https://files.catbox.moe/el0qlh.jpeg" alt="FEE-XMD Logo" class="logo">
+                <h1>FEE-XMD PAIR</h1>
+                <p>Get WhatsApp pairing code for Fee-XMD bot</p>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>How to use:</strong> Enter your WhatsApp number (including country code) and click Generate. You'll receive a 8-digit code to pair with Fee-XMD bot.
+                </div>
+            </div>
+
+            <!-- Input Section -->
+            <div class="input-section">
+                <label class="label">📱 WhatsApp Number</label>
+                <div class="input-group">
+                    <input type="tel" id="phoneNumber" placeholder="e.g., 255752593977" value="255">
+                    <button onclick="generatePairingCode()" id="generateBtn">
+                        <span id="btnText">Generate Code</span>
+                        <span id="btnLoader" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
+                </div>
+                <p style="color: #5a6b7c; font-size: 0.8rem; margin-top: 0.5rem;">
+                    <i class="fas fa-globe"></i> Include country code (e.g., 255 for Tanzania)
+                </p>
+            </div>
+
+            <!-- Code Display (Initially Hidden) -->
+            <div id="codeSection" style="display: none;">
+                <div class="code-display">
+                    <div class="code-label">
+                        <i class="fas fa-qrcode"></i> YOUR PAIRING CODE
+                    </div>
+                    <div id="pairingCode">••••••••</div>
+                    <button class="copy-btn" onclick="copyPairingCode()">
+                        <i class="fas fa-copy"></i> Copy Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="buttons-grid">
+                <a href="#" class="action-btn" onclick="window.open('https://github.com/Fred1e/Fee-xmd', '_blank')">
+                    <i class="fab fa-github"></i> Source Code
+                </a>
+                <a href="#" class="action-btn" onclick="window.open('https://whatsapp.com/channel/0029Vb6mzVF7tkj42VNPrZ3V', '_blank')">
+                    <i class="fab fa-whatsapp"></i> Channel
+                </a>
+                <a href="#" class="action-btn" onclick="window.open('https://fee-xmd.online', '_blank')">
+                    <i class="fas fa-globe"></i> Website
+                </a>
+                <a href="#" class="action-btn" onclick="window.location.href='dashboard.html'">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>🩷 DEVICE WANT TO LOGIN</p>
+                <p>Powered by <a href="#" onclick="window.open('https://github.com/Fred1e', '_blank')">Fee-XMD</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Base URL
+        const API_URL = 'https://fee-ses.onrender.com/code';
+
+        // Generate Pairing Code
+        async function generatePairingCode() {
+            const phoneInput = document.getElementById('phoneNumber');
+            const generateBtn = document.getElementById('generateBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const codeSection = document.getElementById('codeSection');
+            const pairingCodeEl = document.getElementById('pairingCode');
+
+            // Get and clean phone number
+            let phone = phoneInput.value.trim().replace(/[^0-9]/g, '');
+
+            // Validate phone number
+            if (!phone) {
+                showNotification('Please enter a phone number', 'error');
+                return;
+            }
+
+            if (phone.length < 10 || phone.length > 15) {
+                showNotification('Please enter a valid phone number (10-15 digits)', 'error');
+                return;
+            }
+
+            // Show loading state
+            generateBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+
+            try {
+                // Call API
+                const response = await fetch(`${API_URL}?number=${encodeURIComponent(phone)}`);
+                const data = await response.json();
+
+                if (!data || !data.code) {
+                    throw new Error('Invalid response from server');
+                }
+
+                // Display code
+                pairingCodeEl.textContent = data.code;
+                codeSection.style.display = 'block';
+
+                showNotification('✓ Code generated successfully!', 'success');
+
+                // Smooth scroll to code
+                codeSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            } catch (error) {
+                console.error('Pairing Error:', error);
+                showNotification('❌ Failed to generate code. Try again later.', 'error');
+                
+                // Hide code section if error
+                codeSection.style.display = 'none';
+            } finally {
+                // Reset button
+                generateBtn.disabled = false;
+                btnText.style.display = 'inline-block';
+                btnLoader.style.display = 'none';
+            }
+        }
+
+        // Copy Pairing Code
+        function copyPairingCode() {
+            const code = document.getElementById('pairingCode').textContent;
+            
+            if (code === '••••••••') {
+                showNotification('No code to copy. Generate a code first.', 'warning');
+                return;
+            }
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification('✓ Code copied to clipboard!', 'success');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showNotification('✓ Code copied to clipboard!', 'success');
+            });
+        }
+
+        // Show Notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notification
+            const existingNotif = document.querySelector('.notification');
+            if (existingNotif) existingNotif.remove();
+
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            // Set icon based on type
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            if (type === 'error') icon = 'fa-exclamation-circle';
+            if (type === 'warning') icon = 'fa-exclamation-triangle';
+
+            notification.innerHTML = `
+                <i class="fas ${icon}" style="color: ${type === 'success' ? '#3fb68b' : type === 'error' ? '#ff4444' : '#ffb347'}"></i>
+                <span>${message}</span>
+            `;
+
+            // Style based on type
+            notification.style.borderLeftColor = 
+                type === 'success' ? '#3fb68b' : 
+                type === 'error' ? '#ff4444' : 
+                '#ffb347';
+
+            document.body.appendChild(notification);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add slideOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Handle enter key
+        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generatePairingCode();
+            }
+        });
+
+        // Auto-format phone number
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length > 15) {
+                value = value.slice(0, 15);
+            }
+            e.target.value = value;
+        });
+
+        // Check for existing code in URL params
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const phone = urlParams.get('number');
+            if (phone) {
+                document.getElementById('phoneNumber').value = phone.replace(/[^0-9]/g, '');
+                generatePairingCode();
+            }
+        }
+
+        // Run on load
+        document.addEventListener('DOMContentLoaded', checkUrlParams);
+    </script>
+</body>
+</html>
