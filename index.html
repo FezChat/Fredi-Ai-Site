@@ -118,7 +118,7 @@
                 <i class="fas fa-robot"></i>
                 <h3>Bot Pairing</h3>
                 <p>Session pairing, deployment help</p>
-                <button class="btn-small" onclick="requestService('pair')">Request</button>
+                <button class="btn-small" onclick="requestService('pair.html')">Request</button>
             </div>
         </div>
     </section>
@@ -173,7 +173,7 @@
         function dismissMessage() {
             document.getElementById('rateMessage').style.display = 'none';
         }
-        
+
         function requestService(service) {
             window.location.href = `https://wa.me/255752593977?text=Hello%20Fredi%2C%20I%20need%20${service}%20service`;
         }
