@@ -642,6 +642,40 @@
       width: 100%;
     }
 
+    /* API Status */
+    .api-status {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 8px 16px;
+      border-radius: 40px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      z-index: 1000;
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--danger);
+    }
+
+    .status-indicator.online {
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
     /* Security Badge */
     .security-badge {
       display: inline-flex;
@@ -706,10 +740,23 @@
       .interactive-btn.copy-btn {
         grid-column: span 1;
       }
+
+      .api-status {
+        top: 10px;
+        right: 10px;
+        font-size: 11px;
+        padding: 6px 12px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- API Status Indicator -->
+  <div class="api-status" id="apiStatus">
+    <span class="status-indicator" id="statusIndicator"></span>
+    <span id="statusText">Checking API...</span>
+  </div>
+
   <div class="tech-background"></div>
   <div class="grid-overlay"></div>
   <div class="floating-shapes">
@@ -747,7 +794,7 @@
             placeholder="2557xxxxxxxx"
             pattern="[0-9]*"
             inputmode="numeric"
-            maxlength="12"
+            value="255"
           >
           <button id="submitBtn" class="generate-btn">
             <i class="fas fa-bolt"></i> Generate Code
@@ -811,15 +858,47 @@
       }
     }
 
+    // Check API status
+    async function checkAPIStatus() {
+      const indicator = document.getElementById('statusIndicator');
+      const statusText = document.getElementById('statusText');
+      
+      try {
+        // Try to hit the API endpoint
+        const response = await fetch(`${API_BASE}/code?number=255700000000`, { 
+          method: 'HEAD',
+          timeout: 5000 
+        }).catch(() => null);
+        
+        if (response && response.ok) {
+          indicator.className = 'status-indicator online';
+          statusText.textContent = 'API Online';
+        } else {
+          indicator.className = 'status-indicator';
+          statusText.textContent = 'API Offline';
+        }
+      } catch (error) {
+        indicator.className = 'status-indicator';
+        statusText.textContent = 'API Unavailable';
+      }
+    }
+
     // Format phone number
     function formatPhoneNumber(input) {
+      // Remove all non-numeric characters
       let value = input.replace(/[^0-9]/g, '');
+      
+      // If starts with 0, replace with 255
       if (value.startsWith('0')) {
         value = '255' + value.substring(1);
       }
+      
+      // If doesn't start with 255 and has content, add 255
       if (!value.startsWith('255') && value.length > 0) {
         value = '255' + value;
       }
+      
+      // Limit to 12 digits (255 + 9 digits)
       return value.substring(0, 12);
     }
 
@@ -843,7 +922,7 @@
       }
     }
 
-    // Generate pair code - Matching bot's API endpoint
+    // Generate pair code using exact endpoint from script
     async function generatePairCode() {
       const phoneInput = document.getElementById('number');
       const submitBtn = document.getElementById('submitBtn');
@@ -860,8 +939,8 @@
         return;
       }
 
-      // Clean and format number
-      const cleanNumber = formatPhoneNumber(phoneInput.value);
+      // Clean and format number exactly like in the bot script
+      const cleanNumber = phoneInput.value.replace(/[^0-9]/g, '');
       phoneInput.value = cleanNumber;
 
       if (cleanNumber.length < 11) {
@@ -879,81 +958,96 @@
         submitBtn.style.transform = '';
       }, 150);
 
+      // Show loading with react emoji like in bot
+      submitBtn.innerHTML = '<i class="fas fa-hourglass-half"></i> ⌛ Generating...';
+      
       // Show loading, hide result
       waitingMessage.style.display = 'flex';
       resultContainer.innerHTML = '';
       
       try {
-        // Using the exact API endpoint from your bot: /code?number=
+        // EXACT API ENDPOINT from your script: /code?number=
         const apiUrl = `${API_BASE}/code?number=${encodeURIComponent(cleanNumber)}`;
         
-        // Simulate API call with timeout (remove setTimeout in production)
-        setTimeout(async () => {
-          try {
-            // Uncomment this for actual API call
-            // const response = await axios.get(apiUrl);
-            // if (!response.data || !response.data.code) throw new Error('Invalid API response');
-            // const pairingCode = response.data.code;
-            
-            // Mock response for demonstration (remove in production)
-            const pairingCode = Math.floor(100000 + Math.random() * 900000).toString();
-            currentPairingCode = pairingCode;
-            
-            // Format code with spaces every 4 characters
-            const formattedCode = pairingCode.match(/.{1,4}/g)?.join(' ') || pairingCode;
-            
-            waitingMessage.style.display = 'none';
-            
-            // Display result matching bot's interactive message format
-            resultContainer.innerHTML = `
-              <div class="code-display">
-                <div class="code-label">
-                  <i class="fas fa-key"></i> 🩷 DEVICE WANT TO LOGIN
-                </div>
-                <div class="code-value">
-                  This is your Code:<br>
-                  <span class="code-highlight">${formattedCode}</span>
-                </div>
-                
-                <div class="interactive-buttons">
-                  <button class="interactive-btn copy-btn" onclick="copyPairingCode(this)">
-                    <i class="fas fa-copy"></i> Copy Code
-                  </button>
-                  
-                  <a href="https://fee-xmd.online" target="_blank" class="interactive-btn">
-                    <i class="fas fa-globe"></i> 🌐 Website
-                  </a>
-                  
-                  <a href="https://github.com/Fred1e/Fee-xmd" target="_blank" class="interactive-btn">
-                    <i class="fab fa-github"></i> ✨ Source Link
-                  </a>
-                  
-                  <a href="https://whatsapp.com/channel/0029Vb6mzVF7tkj42VNPrZ3V" target="_blank" class="interactive-btn">
-                    <i class="fab fa-whatsapp"></i> 🧧 View Channel
-                  </a>
-                </div>
-                
-                <div class="footer-text" style="margin-top: 15px; font-size: 12px;">
-                  <i class="fas fa-clock"></i> Valid for 5 minutes • One-time use
-                </div>
-              </div>
-            `;
-          } catch (error) {
-            waitingMessage.style.display = 'none';
-            resultContainer.innerHTML = `
-              <div class="error-message">
-                <i class="fas fa-exclamation-triangle"></i> ❌ Failed to generate pairing code.<br>
-                <small>${error.message || 'Try again later.'}</small>
-              </div>
-            `;
-          }
-        }, 1500); // Simulate network delay
+        console.log('Calling API:', apiUrl);
         
-      } catch (error) {
+        // Make the actual API call
+        const response = await axios.get(apiUrl);
+        
+        // Check response format exactly like in bot script
+        if (!response.data || !response.data.code) {
+          throw new Error('Invalid API response');
+        }
+
+        // Get the pairing code from response
+        const pairingCode = response.data.code;
+        currentPairingCode = pairingCode;
+        
+        // Format code with spaces every 4 characters for display
+        const formattedCode = pairingCode.match(/.{1,4}/g)?.join(' ') || pairingCode;
+        
+        // Hide loader and update button
         waitingMessage.style.display = 'none';
+        submitBtn.innerHTML = '<i class="fas fa-bolt"></i> Generate Code';
+        
+        // Show success react
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> ✅ Success!';
+        setTimeout(() => {
+          submitBtn.innerHTML = '<i class="fas fa-bolt"></i> Generate Code';
+        }, 2000);
+        
+        // Display result matching bot's interactive message format EXACTLY
+        resultContainer.innerHTML = `
+          <div class="code-display">
+            <div class="code-label">
+              <i class="fas fa-key"></i> 🩷 DEVICE WANT TO LOGIN
+            </div>
+            <div class="code-value">
+              This is your Code:<br>
+              <span class="code-highlight">${formattedCode}</span>
+            </div>
+            
+            <div class="interactive-buttons">
+              <button class="interactive-btn copy-btn" onclick="copyPairingCode(this)">
+                <i class="fas fa-copy"></i> Copy Code
+              </button>
+              
+              <a href="https://fee-xmd.online" target="_blank" class="interactive-btn">
+                <i class="fas fa-globe"></i> 🌐 Website
+              </a>
+              
+              <a href="https://github.com/Fred1e/Fee-xmd" target="_blank" class="interactive-btn">
+                <i class="fab fa-github"></i> ✨ Source Link
+              </a>
+              
+              <a href="https://whatsapp.com/channel/0029Vb6mzVF7tkj42VNPrZ3V" target="_blank" class="interactive-btn">
+                <i class="fab fa-whatsapp"></i> 🧧 View Channel
+              </a>
+            </div>
+            
+            <div style="color: var(--text-muted); font-size: 12px; margin-top: 15px; text-align: center;">
+              <i class="fas fa-clock"></i> Valid for 5 minutes • One-time use
+            </div>
+          </div>
+        `;
+
+      } catch (error) {
+        console.error('PAIR ERROR:', error);
+        
+        // Hide loader
+        waitingMessage.style.display = 'none';
+        
+        // Show error react
+        submitBtn.innerHTML = '<i class="fas fa-times"></i> ❌ Failed';
+        setTimeout(() => {
+          submitBtn.innerHTML = '<i class="fas fa-bolt"></i> Generate Code';
+        }, 2000);
+        
+        // Display error message exactly like bot
         resultContainer.innerHTML = `
           <div class="error-message">
-            <i class="fas fa-exclamation-triangle"></i> ❌ Network error. Please try again.
+            <i class="fas fa-exclamation-triangle"></i> ❌ Failed to generate pairing code.<br>
+            <small>${error.response?.data?.message || error.message || 'Try again later.'}</small>
           </div>
         `;
       }
@@ -962,6 +1056,10 @@
     // Event Listeners
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
+      checkAPIStatus();
+      
+      // Check API status every 30 seconds
+      setInterval(checkAPIStatus, 30000);
       
       const submitBtn = document.getElementById('submitBtn');
       const phoneInput = document.getElementById('number');
@@ -982,9 +1080,7 @@
       // Auto-format phone number
       phoneInput.addEventListener('input', (e) => {
         let value = e.target.value.replace(/[^0-9]/g, '');
-        if (value.length > 12) {
-          value = value.substring(0, 12);
-        }
+        value = formatPhoneNumber(value);
         e.target.value = value;
       });
       
