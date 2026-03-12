@@ -866,18 +866,21 @@
       try {
         // Try to hit the API endpoint
         const response = await fetch(`${API_BASE}/code?number=255700000000`, { 
-          method: 'HEAD',
-          timeout: 5000 
-        }).catch(() => null);
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
         
-        if (response && response.ok) {
+        if (response.ok) {
           indicator.className = 'status-indicator online';
           statusText.textContent = 'API Online';
         } else {
           indicator.className = 'status-indicator';
-          statusText.textContent = 'API Offline';
+          statusText.textContent = `API Error ${response.status}`;
         }
       } catch (error) {
+        console.error('API Check Error:', error);
         indicator.className = 'status-indicator';
         statusText.textContent = 'API Unavailable';
       }
@@ -971,16 +974,43 @@
         
         console.log('Calling API:', apiUrl);
         
-        // Make the actual API call
-        const response = await axios.get(apiUrl);
+        // Make the actual API call with proper headers
+        const response = await axios.get(apiUrl, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          timeout: 30000 // 30 second timeout
+        });
         
-        // Check response format exactly like in bot script
-        if (!response.data || !response.data.code) {
-          throw new Error('Invalid API response');
+        console.log('API Response:', response.data);
+        
+        // Check response format - the API might return the code directly or in a property
+        let pairingCode = '';
+        
+        if (typeof response.data === 'string') {
+          // If response is directly a string
+          pairingCode = response.data;
+        } else if (response.data.code) {
+          // If response has code property
+          pairingCode = response.data.code;
+        } else if (response.data.pairingCode) {
+          // If response has pairingCode property
+          pairingCode = response.data.pairingCode;
+        } else if (response.data.data && response.data.data.code) {
+          // If nested in data property
+          pairingCode = response.data.data.code;
+        } else {
+          // Try to stringify the whole response
+          pairingCode = JSON.stringify(response.data);
         }
 
-        // Get the pairing code from response
-        const pairingCode = response.data.code;
+        if (!pairingCode) {
+          throw new Error('No code received from API');
+        }
+
+        // Clean the code - remove any quotes or extra characters
+        pairingCode = pairingCode.toString().replace(/["']/g, '').trim();
         currentPairingCode = pairingCode;
         
         // Format code with spaces every 4 characters for display
@@ -988,7 +1018,6 @@
         
         // Hide loader and update button
         waitingMessage.style.display = 'none';
-        submitBtn.innerHTML = '<i class="fas fa-bolt"></i> Generate Code';
         
         // Show success react
         submitBtn.innerHTML = '<i class="fas fa-check"></i> ✅ Success!';
@@ -1043,11 +1072,38 @@
           submitBtn.innerHTML = '<i class="fas fa-bolt"></i> Generate Code';
         }, 2000);
         
+        // Get detailed error message
+        let errorMessage = 'Try again later.';
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Error Response Data:', error.response.data);
+          console.error('Error Response Status:', error.response.status);
+          
+          if (error.response.status === 503) {
+            errorMessage = 'Service temporarily unavailable (503). Please try again in a few moments.';
+          } else if (error.response.data) {
+            if (typeof error.response.data === 'string') {
+              errorMessage = error.response.data;
+            } else if (error.response.data.message) {
+              errorMessage = error.response.data.message;
+            } else if (error.response.data.error) {
+              errorMessage = error.response.data.error;
+            }
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = 'No response from server. Please check your connection.';
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        
         // Display error message exactly like bot
         resultContainer.innerHTML = `
           <div class="error-message">
             <i class="fas fa-exclamation-triangle"></i> ❌ Failed to generate pairing code.<br>
-            <small>${error.response?.data?.message || error.message || 'Try again later.'}</small>
+            <small>${errorMessage}</small>
           </div>
         `;
       }
