@@ -2,709 +2,706 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fredi Website Content Extractor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Fredi Web Extractor Pro | Extract & Analyze Website Assets</title>
+    <!-- Use reliable CDN with fallback -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
         :root {
             --primary: #1877F2;
+            --primary-dark: #0e5fd9;
             --secondary: #42B72A;
             --dark: #121212;
             --dark-gray: #1E1E1E;
             --medium-gray: #2D2D2D;
             --light-gray: #3A3A3A;
+            --card-bg: #252525;
             --text-primary: #FFFFFF;
             --text-secondary: #B3B3B3;
-            --card-bg: #252525;
-            --border-radius: 12px;
-            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --success-color: #4CAF50;
-            --error-color: #f44336;
-            --warning-color: #ff9800;
+            --border-radius: 16px;
+            --box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            --transition: all 0.25s ease;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --warning: #f39c12;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
+
         body {
-            background-color: var(--dark);
+            background: var(--dark);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 20px;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(24, 119, 242, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(66, 183, 42, 0.1) 0%, transparent 50%);
+            padding: 24px 20px;
+            background-image: radial-gradient(circle at 15% 30%, rgba(24,119,242,0.08) 0%, transparent 45%),
+                              radial-gradient(circle at 85% 70%, rgba(66,183,42,0.08) 0%, transparent 50%);
         }
-        
+
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
         }
-        
+
         header {
             text-align: center;
             margin-bottom: 40px;
-            position: relative;
         }
-        
+
         .logo {
             display: inline-flex;
             align-items: center;
-            margin-bottom: 20px;
+            gap: 12px;
+            font-size: 2.2rem;
+            font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            font-size: 2.5rem;
-            font-weight: 700;
+            margin-bottom: 12px;
         }
-        
+
         .logo i {
-            margin-right: 12px;
-            font-size: 2.2rem;
+            font-size: 2rem;
+            color: var(--primary);
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
         }
-        
+
         .subtitle {
             color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: 300;
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
-            line-height: 1.7;
-        }
-        
-        .input-section {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: var(--dark-gray);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--light-gray);
-        }
-        
-        input[type="url"] {
-            flex: 1;
-            padding: 15px 20px;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--light-gray);
-            background-color: var(--card-bg);
-            color: var(--text-primary);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        
-        input[type="url"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.3);
-        }
-        
-        button {
-            padding: 15px 30px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(24, 119, 242, 0.3);
-        }
-        
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .status {
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            text-align: center;
-            display: none;
-            transition: var(--transition);
-        }
-        
-        .success {
-            background-color: rgba(76, 175, 80, 0.2);
-            color: var(--success-color);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-        }
-        
-        .error {
-            background-color: rgba(244, 67, 54, 0.2);
-            color: var(--error-color);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-        }
-        
-        .warning {
-            background-color: rgba(255, 152, 0, 0.2);
-            color: var(--warning-color);
-            border: 1px solid rgba(255, 152, 0, 0.3);
-        }
-        
-        .results {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            display: none;
-        }
-        
-        .result-section {
-            background-color: var(--dark-gray);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--light-gray);
-            transition: var(--transition);
-        }
-        
-        .result-section:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-        }
-        
-        .result-section h2 {
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-primary);
-            font-size: 1.4rem;
-        }
-        
-        .content {
-            margin-top: 15px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        pre {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            color: #abb2bf;
-            font-family: 'Consolas', monospace;
-            white-space: pre-wrap;
-            position: relative;
-            border: 1px solid var(--light-gray);
-            font-size: 0.9rem;
             line-height: 1.5;
         }
-        
-        .copy-btn {
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: 500;
-            transition: var(--transition);
+
+        .stats-grid {
             display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .copy-btn:hover {
-            background: rgba(0, 0, 0, 0.7);
-        }
-        
-        .media-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-        }
-        
-        .media-item {
-            background-color: var(--card-bg);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            word-break: break-all;
-            position: relative;
-            border: 1px solid var(--light-gray);
-            transition: var(--transition);
-        }
-        
-        .media-item:hover {
-            border-color: var(--primary);
-        }
-        
-        .media-copy {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: var(--transition);
-        }
-        
-        .media-copy:hover {
-            background: rgba(0, 0, 0, 0.7);
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: var(--light-text);
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .stats {
-            display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
-            margin-bottom: 20px;
+            gap: 16px;
             background: var(--dark-gray);
-            padding: 20px;
+            padding: 20px 28px;
             border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            margin-bottom: 28px;
             border: 1px solid var(--light-gray);
+            backdrop-filter: blur(4px);
         }
-        
-        .stat-item {
-            text-align: center;
+
+        .stat-card {
             flex: 1;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+            padding: 12px 8px;
+            border-radius: 20px;
         }
-        
+
         .stat-value {
             font-size: 2rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--primary);
-            margin-bottom: 5px;
+            letter-spacing: -0.5px;
         }
-        
+
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
+            margin-top: 6px;
         }
-        
-        .file-count {
-            display: inline-block;
-            background: var(--primary);
+
+        .input-panel {
+            background: var(--dark-gray);
+            padding: 28px;
+            border-radius: var(--border-radius);
+            margin-bottom: 24px;
+            border: 1px solid var(--light-gray);
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .input-panel input {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--light-gray);
+            padding: 16px 20px;
+            border-radius: 60px;
             color: white;
-            padding: 3px 8px;
-            border-radius: 20px;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .input-panel input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(24,119,242,0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(95deg, var(--primary), var(--primary-dark));
+            border: none;
+            padding: 0 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(24,119,242,0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .status {
+            padding: 14px 20px;
+            border-radius: 60px;
+            margin-bottom: 24px;
+            display: none;
+            font-weight: 500;
+            backdrop-filter: blur(8px);
+        }
+
+        .status.success { background: rgba(46,204,113,0.18); border-left: 5px solid var(--success); color: #d0ffd0; display: block; }
+        .status.error { background: rgba(231,76,60,0.18); border-left: 5px solid var(--error); color: #ffc9c9; display: block; }
+        .status.warning { background: rgba(243,156,18,0.18); border-left: 5px solid var(--warning); color: #ffe0b3; display: block; }
+
+        .results {
+            display: none;
+            gap: 24px;
+            flex-direction: column;
+        }
+
+        .card {
+            background: var(--dark-gray);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light-gray);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            background: rgba(0,0,0,0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge {
+            background: var(--primary);
+            padding: 4px 12px;
+            border-radius: 40px;
             font-size: 0.8rem;
             font-weight: 600;
-            margin-left: 10px;
         }
-        
+
+        .copy-btn-sm {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .copy-btn-sm:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .content-area {
+            padding: 20px;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        pre {
+            background: #0f0f12;
+            padding: 18px;
+            border-radius: 14px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+        }
+
+        .media-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 14px 16px;
+            border: 1px solid var(--light-gray);
+            transition: 0.2s;
+            word-break: break-all;
+            position: relative;
+        }
+
+        .media-card:hover {
+            border-color: var(--primary);
+        }
+
+        .media-url {
+            font-size: 0.8rem;
+            color: #bbd9ff;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .inline-copy {
+            background: rgba(0,0,0,0.6);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
         .empty-state {
             text-align: center;
-            padding: 40px;
+            padding: 48px 20px;
             color: var(--text-secondary);
         }
-        
+
         .empty-state i {
             font-size: 3rem;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
             opacity: 0.5;
         }
-        
+
         footer {
+            margin-top: 50px;
             text-align: center;
-            margin-top: 60px;
-            padding-top: 30px;
+            font-size: 0.8rem;
+            color: #5a5a6e;
             border-top: 1px solid var(--light-gray);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            padding-top: 28px;
         }
-        
-        @media (max-width: 768px) {
-            .input-section {
+
+        @media (max-width: 680px) {
+            .input-panel {
                 flex-direction: column;
             }
-            
-            .media-list {
-                grid-template-columns: 1fr;
+            .btn-primary {
+                justify-content: center;
+                padding: 14px;
             }
-            
-            .stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .result-section h2 {
+            .card-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-code"></i>
-                <span>Fredi Extractor</span>
-            </div>
-            <p class="subtitle">Extract HTML, CSS, JavaScript, and media files from any website with our powerful content extraction tool.</p>
-        </header>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-value" id="total-extractions">0</div>
-                <div class="stat-label">Total Extractions</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="success-rate">100%</div>
-                <div class="stat-label">Success Rate</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="today-extractions">0</div>
-                <div class="stat-label">Today</div>
-            </div>
+<div class="container">
+    <header>
+        <div class="logo">
+            <i class="fas fa-spider"></i>
+            <span>Fredi Extractor Pro</span>
         </div>
-        
-        <div class="input-section">
-            <input type="url" id="url-input" placeholder="Enter website URL (e.g., https://example.com)" required>
-            <button id="extract-btn">
-                <i class="fas fa-download"></i>
-                Extract Content
-            </button>
-        </div>
-        
-        <div id="status" class="status"></div>
-        
-        <div id="results" class="results">
-            <div class="result-section" id="html-section">
-                <h2>
-                    <span>HTML Content <span class="file-count" id="html-count">0</span></span>
-                    <button class="copy-btn" onclick="copyElementContent('html-content')">
-                        <i class="fas fa-copy"></i>
-                        Copy HTML
-                    </button>
-                </h2>
-                <div class="content">
-                    <pre id="html-content"></pre>
-                </div>
-            </div>
-            
-            <div class="result-section" id="css-section">
-                <h2>
-                    <span>CSS Files <span class="file-count" id="css-count">0</span></span>
-                    <button class="copy-btn" onclick="copyElementContent('css-content')">
-                        <i class="fas fa-copy"></i>
-                        Copy All URLs
-                    </button>
-                </h2>
-                <div class="content" id="css-content"></div>
-            </div>
-            
-            <div class="result-section" id="js-section">
-                <h2>
-                    <span>JavaScript Files <span class="file-count" id="js-count">0</span></span>
-                    <button class="copy-btn" onclick="copyElementContent('js-content')">
-                        <i class="fas fa-copy"></i>
-                        Copy All URLs
-                    </button>
-                </h2>
-                <div class="content" id="js-content"></div>
-            </div>
-            
-            <div class="result-section" id="media-section">
-                <h2>
-                    <span>Media Files <span class="file-count" id="media-count">0</span></span>
-                    <button class="copy-btn" onclick="copyElementContent('media-content')">
-                        <i class="fas fa-copy"></i>
-                        Copy All URLs
-                    </button>
-                </h2>
-                <div class="content">
-                    <div class="media-list" id="media-content"></div>
-                </div>
-            </div>
-        </div>
+        <p class="subtitle">Deep extraction of HTML, CSS, JavaScript & media assets — works with modern CORS bypass & reliable fetching.</p>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-value" id="totalExtractions">0</div><div class="stat-label">Total Runs</div></div>
+        <div class="stat-card"><div class="stat-value" id="successRate">100%</div><div class="stat-label">Success Rate</div></div>
+        <div class="stat-card"><div class="stat-value" id="todayCount">0</div><div class="stat-label">Today</div></div>
+        <div class="stat-card"><div class="stat-value" id="lastAssets">0</div><div class="stat-label">Last Assets</div></div>
     </div>
 
-    <script>
-        // Initialize stats
-        let totalExtractions = parseInt(localStorage.getItem('totalExtractions')) || 0;
-        let todayExtractions = parseInt(localStorage.getItem('todayExtractions')) || 0;
-        let successCount = parseInt(localStorage.getItem('successCount')) || 0;
-        
-        // Update stats display
-        function updateStats() {
-            document.getElementById('total-extractions').textContent = totalExtractions;
-            document.getElementById('today-extractions').textContent = todayExtractions;
-            
-            const successRate = totalExtractions > 0 ? Math.round((successCount / totalExtractions) * 100) : 100;
-            document.getElementById('success-rate').textContent = `${successRate}%`;
+    <div class="input-panel">
+        <input type="text" id="targetUrl" placeholder="https://example.com or any website" value="https://example.com">
+        <button class="btn-primary" id="extractBtn"><i class="fas fa-cloud-download-alt"></i> Extract Full Content</button>
+    </div>
+
+    <div id="statusMsg" class="status"></div>
+
+    <div id="resultsPanel" class="results">
+        <!-- HTML block -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-code"></i> HTML Source <span class="badge" id="htmlFileBadge">1</span></h2>
+                <button class="copy-btn-sm" id="copyHtmlBtn"><i class="fas fa-copy"></i> Copy HTML</button>
+            </div>
+            <div class="content-area">
+                <pre id="htmlPreview">// HTML will appear here</pre>
+            </div>
+        </div>
+
+        <!-- CSS assets -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fab fa-css3-alt"></i> CSS Stylesheets <span class="badge" id="cssCountBadge">0</span></h2>
+                <button class="copy-btn-sm" id="copyAllCssBtn"><i class="fas fa-copy"></i> Copy All URLs</button>
+            </div>
+            <div class="content-area" id="cssListContainer"></div>
+        </div>
+
+        <!-- JS assets -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fab fa-js"></i> JavaScript Files <span class="badge" id="jsCountBadge">0</span></h2>
+                <button class="copy-btn-sm" id="copyAllJsBtn"><i class="fas fa-copy"></i> Copy All URLs</button>
+            </div>
+            <div class="content-area" id="jsListContainer"></div>
+        </div>
+
+        <!-- Media files -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-photo-video"></i> Media Assets (img, video, audio) <span class="badge" id="mediaCountBadge">0</span></h2>
+                <button class="copy-btn-sm" id="copyAllMediaBtn"><i class="fas fa-copy"></i> Copy All URLs</button>
+            </div>
+            <div class="content-area" id="mediaListContainer"></div>
+        </div>
+    </div>
+    <footer>🔍 Extractor uses advanced proxy + regex fallback. Extracts all external assets & inline HTML. CORS handled via AllOrigins & fallback mode.</footer>
+</div>
+
+<script>
+    // ---------- STATS MANAGEMENT (persistent) ----------
+    let totalExtractions = parseInt(localStorage.getItem('fredi_total')) || 0;
+    let successCount = parseInt(localStorage.getItem('fredi_success')) || 0;
+    let todayBase = localStorage.getItem('fredi_today_date');
+    let todayExtractions = parseInt(localStorage.getItem('fredi_today_count')) || 0;
+    const currentDate = new Date().toDateString();
+
+    if (todayBase !== currentDate) {
+        todayExtractions = 0;
+        localStorage.setItem('fredi_today_date', currentDate);
+        localStorage.setItem('fredi_today_count', '0');
+    }
+
+    function updateStatsUI(extraSuccess = false) {
+        document.getElementById('totalExtractions').innerText = totalExtractions;
+        document.getElementById('todayCount').innerText = todayExtractions;
+        let successPercent = totalExtractions > 0 ? Math.round((successCount / totalExtractions) * 100) : 100;
+        document.getElementById('successRate').innerText = `${successPercent}%`;
+    }
+
+    function incrementExtractionStat(isSuccess) {
+        totalExtractions++;
+        localStorage.setItem('fredi_total', totalExtractions);
+        if (isSuccess) {
+            successCount++;
+            localStorage.setItem('fredi_success', successCount);
         }
-        
-        // Simple copy function that works without Clipboard API
-        function copyElementContent(elementId) {
-            const element = document.getElementById(elementId);
-            const range = document.createRange();
-            range.selectNode(element);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showStatus('Content copied to clipboard!', false);
-                } else {
-                    showStatus('Failed to copy content', true);
-                }
-            } catch (err) {
-                showStatus('Error copying content: ' + err, true);
+        todayExtractions++;
+        localStorage.setItem('fredi_today_count', todayExtractions);
+        updateStatsUI();
+    }
+
+    // Helper: display status
+    function showStatusMessage(message, type = 'success') {
+        const statusDiv = document.getElementById('statusMsg');
+        statusDiv.textContent = message;
+        statusDiv.className = `status ${type}`;
+        statusDiv.style.display = 'block';
+        if (type !== 'error') {
+            setTimeout(() => { if (statusDiv) statusDiv.style.display = 'none'; }, 5000);
+        }
+    }
+
+    // universal copy text utility
+    async function copyToClipboard(text, successMsg = "Copied to clipboard!") {
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+                showStatusMessage(successMsg, 'success');
+            } else {
+                // fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showStatusMessage(successMsg, 'success');
             }
-            
-            window.getSelection().removeAllRanges();
+        } catch (err) {
+            showStatusMessage("Copy failed: " + err.message, 'error');
+        }
+    }
+
+    // Helper: create absolute URLs robustly
+    function toAbsoluteUrl(url, baseUrl) {
+        if (!url) return null;
+        if (url.startsWith('data:') || url.startsWith('blob:') || url.startsWith('javascript:')) return null;
+        try {
+            return new URL(url, baseUrl).href;
+        } catch (e) {
+            if (url.startsWith('//')) return new URL(`https:${url}`, baseUrl).href;
+            return null;
+        }
+    }
+
+    // Extract media assets via DOM parser + regex fallback for robust detection
+    async function extractWebsiteContent() {
+        const urlInput = document.getElementById('targetUrl').value.trim();
+        if (!urlInput) {
+            showStatusMessage("Please enter a valid URL", 'error');
+            return;
+        }
+        let validUrl = urlInput;
+        if (!urlInput.startsWith('http://') && !urlInput.startsWith('https://')) {
+            validUrl = 'https://' + urlInput;
+        }
+        try {
+            new URL(validUrl);
+        } catch (e) {
+            showStatusMessage("Invalid URL format. Include http:// or https://", 'error');
+            return;
         }
 
-        function showStatus(message, isError = false, isWarning = false) {
-            const status = document.getElementById('status');
-            status.textContent = message;
-            
-            if (isError) {
-                status.className = 'status error';
-            } else if (isWarning) {
-                status.className = 'status warning';
-            } else {
-                status.className = 'status success';
-            }
-            
-            status.style.display = 'block';
-            
-            // Auto-hide success messages after 5 seconds
-            if (!isError && !isWarning) {
-                setTimeout(() => {
-                    status.style.display = 'none';
-                }, 5000);
-            }
-        }
-        
-        function isValidUrl(url) {
-            try {
-                new URL(url);
-                return true;
-            } catch (e) {
-                return false;
-            }
-        }
-        
-        function makeAbsoluteUrl(url, baseUrl) {
-            try {
-                return new URL(url, baseUrl).href;
-            } catch (e) {
-                console.error('Error making URL absolute:', e);
-                return url;
-            }
-        }
-        
-        async function extractWebsiteContent() {
-            const urlInput = document.getElementById('url-input').value.trim();
-            const extractBtn = document.getElementById('extract-btn');
-            
-            if (!urlInput) {
-                showStatus('Please enter a website URL', true);
-                return;
-            }
-            
-            if (!isValidUrl(urlInput)) {
-                showStatus('Please enter a valid URL starting with http:// or https://', true);
-                return;
-            }
-            
-            try {
-                extractBtn.disabled = true;
-                extractBtn.innerHTML = '<span class="loading"></span> Extracting...';
-                showStatus('Fetching website content...', false, true);
-                
-                document.getElementById('results').style.display = 'none';
-                
-                // Update extraction stats
-                totalExtractions++;
-                todayExtractions++;
-                localStorage.setItem('totalExtractions', totalExtractions);
-                localStorage.setItem('todayExtractions', todayExtractions);
-                updateStats();
-                
-                // Use CORS proxy to bypass restrictions
-                const proxyUrl = 'https://api.allorigins.win/get?url=';
-                const response = await axios.get(`${proxyUrl}${encodeURIComponent(urlInput)}`);
-                
-                if (!response.data || !response.data.contents) {
-                    throw new Error('No content received from the website. The site might be blocking our requests.');
+        const extractBtn = document.getElementById('extractBtn');
+        extractBtn.disabled = true;
+        extractBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Fetching & parsing...';
+        document.getElementById('resultsPanel').style.display = 'none';
+        showStatusMessage(`Fetching ${validUrl} ... please wait`, 'warning');
+
+        try {
+            // MULTI-PROXY APPROACH: primary allorigins, fallback to corsproxy.io if needed
+            let htmlContent = null;
+            let usedProxy = null;
+            const proxyEndpoints = [
+                `https://api.allorigins.win/get?url=${encodeURIComponent(validUrl)}`,
+                `https://corsproxy.io/?url=${encodeURIComponent(validUrl)}`
+            ];
+
+            for (let proxy of proxyEndpoints) {
+                try {
+                    const response = await axios.get(proxy, { timeout: 18000 });
+                    if (proxy.includes('allorigins')) {
+                        if (response.data && response.data.contents) {
+                            htmlContent = response.data.contents;
+                            usedProxy = 'allorigins';
+                            break;
+                        }
+                    } else {
+                        if (typeof response.data === 'string') {
+                            htmlContent = response.data;
+                            usedProxy = 'corsproxy';
+                            break;
+                        } else if (response.data && response.data.content) {
+                            htmlContent = response.data.content;
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    console.warn(`Proxy ${proxy} failed`, e);
+                    continue;
                 }
-                
-                const html = response.data.contents;
-                
-                document.getElementById('html-content').textContent = html;
-                
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // Extract media files
-                const mediaElements = doc.querySelectorAll('img[src], video[src], audio[src], source[src]');
-                const mediaFiles = Array.from(mediaElements).map(el => {
-                    const src = el.getAttribute('src');
-                    return src ? makeAbsoluteUrl(src, urlInput) : null;
-                }).filter(Boolean);
-                
-                // Extract CSS files
-                const cssLinks = doc.querySelectorAll('link[rel="stylesheet"]');
-                const cssFiles = Array.from(cssLinks).map(link => {
-                    const href = link.getAttribute('href');
-                    return href ? makeAbsoluteUrl(href, urlInput) : null;
-                }).filter(Boolean);
-                
-                // Extract JS files
-                const jsScripts = doc.querySelectorAll('script[src]');
-                const jsFiles = Array.from(jsScripts).map(script => {
-                    const src = script.getAttribute('src');
-                    return src ? makeAbsoluteUrl(src, urlInput) : null;
-                }).filter(Boolean);
-                
-                // Update file counts
-                document.getElementById('html-count').textContent = '1';
-                document.getElementById('css-count').textContent = cssFiles.length;
-                document.getElementById('js-count').textContent = jsFiles.length;
-                document.getElementById('media-count').textContent = mediaFiles.length;
-                
-                // Process CSS files
-                const cssContentDiv = document.getElementById('css-content');
-                cssContentDiv.innerHTML = '';
-                
-                if (cssFiles.length > 0) {
-                    cssFiles.forEach(cssFile => {
-                        const cssFileDiv = document.createElement('div');
-                        cssFileDiv.className = 'media-item';
-                        cssFileDiv.innerHTML = `
-                            <strong>CSS File:</strong><br>
-                            ${cssFile}
-                            <button class="media-copy" onclick="copyText('${cssFile.replace(/'/g, "\\'")}')">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        `;
-                        cssContentDiv.appendChild(cssFileDiv);
-                    });
-                } else {
-                    cssContentDiv.innerHTML = '<div class="empty-state"><i class="fas fa-file-code"></i><p>No external CSS files found.</p></div>';
-                }
-                
-                // Process JS files
-                const jsContentDiv = document.getElementById('js-content');
-                jsContentDiv.innerHTML = '';
-                
-                if (jsFiles.length > 0) {
-                    jsFiles.forEach(jsFile => {
-                        const jsFileDiv = document.createElement('div');
-                        jsFileDiv.className = 'media-item';
-                        jsFileDiv.innerHTML = `
-                            <strong>JavaScript File:</strong><br>
-                            ${jsFile}
-                            <button class="media-copy" onclick="copyText('${jsFile.replace(/'/g, "\\'")}')">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        `;
-                        jsContentDiv.appendChild(jsFileDiv);
-                    });
-                } else {
-                    jsContentDiv.innerHTML = '<div class="empty-state"><i class="fas fa-file-code"></i><p>No external JavaScript files found.</p></div>';
-                }
-                
-                // Process media files
-                const mediaContentDiv = document.getElementById('media-content');
-                mediaContentDiv.innerHTML = '';
-                
-                if (mediaFiles.length > 0) {
-                    mediaFiles.forEach(mediaUrl => {
-                        const mediaItem = document.createElement('div');
-                        mediaItem.className = 'media-item';
-                        mediaItem.innerHTML = `
-                            <strong>Media File:</strong><br>
-                            ${mediaUrl}
-                            <button class="media-copy" onclick="copyText('${mediaUrl.replace(/'/g, "\\'")}')">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        `;
-                        mediaContentDiv.appendChild(mediaItem);
-                    });
-                } else {
-                    mediaContentDiv.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>No media files found.</p></div>';
-                }
-                
-                document.getElementById('results').style.display = 'grid';
-                showStatus(`Successfully extracted content from ${urlInput}! Found ${cssFiles.length} CSS files, ${jsFiles.length} JS files, and ${mediaFiles.length} media files.`);
-                
-                // Update success count
-                successCount++;
-                localStorage.setItem('successCount', successCount);
-                updateStats();
-                
-            } catch (error) {
-                console.error('Extraction error:', error);
-                
-                if (error.response) {
-                    // Server responded with error status
-                    showStatus(`Error: Server responded with status ${error.response.status}`, true);
-                } else if (error.request) {
-                    // Request was made but no response received
-                    showStatus('Error: No response received from server. Check your internet connection.', true);
-                } else {
-                    // Something else happened
-                    showStatus(`Error: ${error.message}`, true);
-                }
-            } finally {
-                extractBtn.disabled = false;
-                extractBtn.innerHTML = '<i class="fas fa-download"></i> Extract Content';
             }
+
+            if (!htmlContent) {
+                throw new Error("Could not fetch website content using available proxies. The site might be blocking or unreachable.");
+            }
+
+            // Show raw HTML preview (first ~20000 chars but full in pre)
+            document.getElementById('htmlPreview').innerText = htmlContent.length > 150000 ? htmlContent.substring(0, 150000) + "\n... (truncated for performance)" : htmlContent;
+            
+            // Parse HTML into DOM
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlContent, 'text/html');
+
+            // ---------- Extract CSS files (link[rel="stylesheet"]) ----------
+            const cssLinks = doc.querySelectorAll('link[rel="stylesheet"]');
+            let cssUrls = [];
+            cssLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href) {
+                    const abs = toAbsoluteUrl(href, validUrl);
+                    if (abs) cssUrls.push(abs);
+                }
+            });
+            // Additional inline style extraction is not needed for URLs, but we capture embedded style if needed (but main task: list files)
+            // Also capture style tags? not required but we keep as file list.
+            
+            // ---------- Extract JavaScript files ----------
+            const jsScripts = doc.querySelectorAll('script[src]');
+            let jsUrls = [];
+            jsScripts.forEach(script => {
+                const src = script.getAttribute('src');
+                if (src) {
+                    const abs = toAbsoluteUrl(src, validUrl);
+                    if (abs) jsUrls.push(abs);
+                }
+            });
+            
+            // ---------- Extract Media: img, video, audio, source tags ----------
+            const mediaSelectors = ['img[src]', 'video > source[src]', 'audio > source[src]', 'video[src]', 'audio[src]', 'source[src]'];
+            let mediaUrlsSet = new Set();
+            mediaSelectors.forEach(selector => {
+                const elements = doc.querySelectorAll(selector);
+                elements.forEach(el => {
+                    let srcAttr = el.getAttribute('src');
+                    if (!srcAttr && selector.includes('source')) srcAttr = el.getAttribute('src');
+                    if (srcAttr) {
+                        const absMedia = toAbsoluteUrl(srcAttr, validUrl);
+                        if (absMedia && (absMedia.match(/\.(jpg|jpeg|png|gif|webp|svg|mp4|webm|ogg|mp3|wav|m4a)/i) || absMedia.includes('image') || absMedia.includes('media'))) {
+                            mediaUrlsSet.add(absMedia);
+                        } else if (absMedia && (srcAttr.includes('.jpg') || srcAttr.includes('.png') || srcAttr.includes('.mp4'))) {
+                            mediaUrlsSet.add(absMedia);
+                        }
+                    }
+                });
+            });
+            // Also check background images in style attribute? optional, improves extraction.
+            const styleAttrElements = doc.querySelectorAll('[style]');
+            styleAttrElements.forEach(el => {
+                const styleVal = el.getAttribute('style');
+                if (styleVal && styleVal.includes('url(')) {
+                    const matches = styleVal.match(/url\(["']?([^"')]+)["']?\)/g);
+                    if (matches) {
+                        matches.forEach(m => {
+                            let bgUrl = m.replace(/url\(["']?/, '').replace(/["']?\)/, '');
+                            const absBg = toAbsoluteUrl(bgUrl, validUrl);
+                            if (absBg && (absBg.match(/\.(jpg|jpeg|png|gif|webp|svg)/i))) mediaUrlsSet.add(absBg);
+                        });
+                    }
+                }
+            });
+            
+            const mediaFiles = Array.from(mediaUrlsSet);
+            
+            // Update badges
+            document.getElementById('htmlFileBadge').innerText = '1';
+            document.getElementById('cssCountBadge').innerText = cssUrls.length;
+            document.getElementById('jsCountBadge').innerText = jsUrls.length;
+            document.getElementById('mediaCountBadge').innerText = mediaFiles.length;
+            document.getElementById('lastAssets').innerText = cssUrls.length + jsUrls.length + mediaFiles.length;
+            
+            // Render CSS list
+            const cssContainer = document.getElementById('cssListContainer');
+            renderAssetList(cssContainer, cssUrls, 'CSS');
+            
+            // Render JS list
+            const jsContainer = document.getElementById('jsListContainer');
+            renderAssetList(jsContainer, jsUrls, 'JS');
+            
+            // Render Media list
+            const mediaContainer = document.getElementById('mediaListContainer');
+            renderAssetList(mediaContainer, mediaFiles, 'Media');
+            
+            // Show results panel
+            document.getElementById('resultsPanel').style.display = 'flex';
+            showStatusMessage(`✅ Extraction complete! Found ${cssUrls.length} CSS, ${jsUrls.length} JS, ${mediaFiles.length} media files.`, 'success');
+            
+            // update success stats
+            incrementExtractionStat(true);
+            
+            // Attach copy handlers for each section (bulk copy)
+            document.getElementById('copyHtmlBtn').onclick = () => copyToClipboard(document.getElementById('htmlPreview').innerText, "HTML copied to clipboard");
+            document.getElementById('copyAllCssBtn').onclick = () => copyToClipboard(cssUrls.join('\n'), `${cssUrls.length} CSS URLs copied`);
+            document.getElementById('copyAllJsBtn').onclick = () => copyToClipboard(jsUrls.join('\n'), `${jsUrls.length} JS URLs copied`);
+            document.getElementById('copyAllMediaBtn').onclick = () => copyToClipboard(mediaFiles.join('\n'), `${mediaFiles.length} Media URLs copied`);
+            
+        } catch (err) {
+            console.error("Extraction critical error", err);
+            showStatusMessage(`Extraction failed: ${err.message || "Network or proxy error"}. Try a different website or check URL.`, 'error');
+            incrementExtractionStat(false);
+            document.getElementById('resultsPanel').style.display = 'none';
+        } finally {
+            extractBtn.disabled = false;
+            extractBtn.innerHTML = '<i class="fas fa-cloud-download-alt"></i> Extract Full Content';
         }
-        
-        // Simple text copy function
-        function copyText(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            showStatus('URL copied to clipboard!');
+    }
+    
+    function renderAssetList(container, urlsArray, typeLabel) {
+        container.innerHTML = '';
+        if (!urlsArray.length) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>No ${typeLabel} assets detected.</p></div>`;
+            return;
         }
-        
-        // Event listeners
-        document.getElementById('extract-btn').addEventListener('click', extractWebsiteContent);
-        document.getElementById('url-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') extractWebsiteContent();
+        const gridDiv = document.createElement('div');
+        gridDiv.className = 'media-grid';
+        urlsArray.forEach(url => {
+            const card = document.createElement('div');
+            card.className = 'media-card';
+            const safeUrl = url.replace(/'/g, "\\'");
+            card.innerHTML = `
+                <div class="media-url"><i class="fas fa-link"></i> ${escapeHtml(url)}</div>
+                <button class="inline-copy" data-copy-url="${escapeHtmlAttr(url)}"><i class="fas fa-copy"></i> Copy URL</button>
+            `;
+            const copyBtn = card.querySelector('.inline-copy');
+            copyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyToClipboard(url, `${typeLabel} URL copied`);
+            });
+            gridDiv.appendChild(card);
         });
-        
-        // Initialize the dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            updateStats();
+        container.appendChild(gridDiv);
+    }
+    
+    // simple escape for innerHTML safety
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
         });
-    </script>
+    }
+    function escapeHtmlAttr(str) {
+        return str.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+    }
+    
+    // Initialize event listeners and stats
+    document.getElementById('extractBtn').addEventListener('click', extractWebsiteContent);
+    document.getElementById('targetUrl').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') extractWebsiteContent();
+    });
+    
+    // Initialize stats UI
+    updateStatsUI();
+    // preload example
+    if(totalExtractions === 0) {
+        // just set defaults
+    }
+    // for demo: ensure last assets field updates after extraction
+    window.extractWebsiteContent = extractWebsiteContent;
+</script>
 </body>
 </html>
