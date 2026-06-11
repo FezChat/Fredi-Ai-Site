@@ -283,6 +283,8 @@
             color: #bbd9ff;
             margin-bottom: 12px;
             display: block;
+            font-family: monospace;
+            overflow-wrap: break-word;
         }
 
         .inline-copy {
@@ -294,6 +296,10 @@
             font-size: 0.75rem;
             cursor: pointer;
             transition: 0.2s;
+        }
+
+        .inline-copy:hover {
+            background: var(--primary);
         }
 
         .empty-state {
@@ -339,7 +345,7 @@
             <i class="fas fa-spider"></i>
             <span>Fredi Extractor Pro</span>
         </div>
-        <p class="subtitle">Deep extraction of HTML, CSS, JavaScript & media assets — works with modern CORS bypass & reliable fetching.</p>
+        <p class="subtitle">Deep extraction of HTML, CSS, JavaScript & media assets — advanced CORS bypass & reliable fetching engine.</p>
     </header>
 
     <div class="stats-grid">
@@ -364,7 +370,7 @@
                 <button class="copy-btn-sm" id="copyHtmlBtn"><i class="fas fa-copy"></i> Copy HTML</button>
             </div>
             <div class="content-area">
-                <pre id="htmlPreview">// HTML will appear here</pre>
+                <pre id="htmlPreview">// Extracted HTML will appear here</pre>
             </div>
         </div>
 
@@ -395,7 +401,7 @@
             <div class="content-area" id="mediaListContainer"></div>
         </div>
     </div>
-    <footer>🔍 Extractor uses advanced proxy + regex fallback. Extracts all external assets & inline HTML. CORS handled via AllOrigins & fallback mode.</footer>
+    <footer>🔍 Advanced proxy chain (AllOrigins + CORSProxy + Fallback). Extracts external assets & inline HTML. Fully functional.</footer>
 </div>
 
 <script>
@@ -412,7 +418,7 @@
         localStorage.setItem('fredi_today_count', '0');
     }
 
-    function updateStatsUI(extraSuccess = false) {
+    function updateStatsUI() {
         document.getElementById('totalExtractions').innerText = totalExtractions;
         document.getElementById('todayCount').innerText = todayExtractions;
         let successPercent = totalExtractions > 0 ? Math.round((successCount / totalExtractions) * 100) : 100;
@@ -442,14 +448,13 @@
         }
     }
 
-    // universal copy text utility
+    // universal copy text utility (modern + legacy)
     async function copyToClipboard(text, successMsg = "Copied to clipboard!") {
         try {
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(text);
                 showStatusMessage(successMsg, 'success');
             } else {
-                // fallback
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 document.body.appendChild(textarea);
@@ -471,11 +476,55 @@
             return new URL(url, baseUrl).href;
         } catch (e) {
             if (url.startsWith('//')) return new URL(`https:${url}`, baseUrl).href;
+            if (url.startsWith('/')) return new URL(url, baseUrl).href;
             return null;
         }
     }
 
-    // Extract media assets via DOM parser + regex fallback for robust detection
+    // Enhanced media extraction: also handles picture sources, background images, iframe posters, etc.
+    function extractEnhancedMedia(doc, baseUrl) {
+        let mediaSet = new Set();
+        // images
+        doc.querySelectorAll('img[src]').forEach(img => {
+            let src = img.getAttribute('src');
+            if (src) { let abs = toAbsoluteUrl(src, baseUrl); if (abs) mediaSet.add(abs); }
+        });
+        // video/audio sources
+        doc.querySelectorAll('video[src], audio[src], source[src]').forEach(el => {
+            let src = el.getAttribute('src');
+            if (src) { let abs = toAbsoluteUrl(src, baseUrl); if (abs) mediaSet.add(abs); }
+        });
+        // picture sources
+        doc.querySelectorAll('picture source[srcset]').forEach(source => {
+            let srcset = source.getAttribute('srcset');
+            if (srcset) {
+                let urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
+                urls.forEach(u => { let abs = toAbsoluteUrl(u, baseUrl); if (abs) mediaSet.add(abs); });
+            }
+        });
+        // background images from style attribute and inline styles
+        doc.querySelectorAll('[style]').forEach(el => {
+            let style = el.getAttribute('style');
+            if (style && style.includes('url(')) {
+                let matches = style.match(/url\(["']?([^"')]+)["']?\)/g);
+                if (matches) {
+                    matches.forEach(m => {
+                        let bgUrl = m.replace(/url\(["']?/, '').replace(/["']?\)/, '');
+                        let abs = toAbsoluteUrl(bgUrl, baseUrl);
+                        if (abs && (abs.match(/\.(jpg|jpeg|png|gif|webp|svg|mp4|webm|ogg|mp3)/i) || abs.includes('image'))) mediaSet.add(abs);
+                    });
+                }
+            }
+        });
+        // also check link rel=preload as media
+        doc.querySelectorAll('link[rel="preload"][as="image"], link[rel="preload"][as="video"], link[rel="preload"][as="audio"]').forEach(link => {
+            let href = link.getAttribute('href');
+            if (href) { let abs = toAbsoluteUrl(href, baseUrl); if (abs) mediaSet.add(abs); }
+        });
+        return Array.from(mediaSet);
+    }
+
+    // MAIN EXTRACTION ENGINE
     async function extractWebsiteContent() {
         const urlInput = document.getElementById('targetUrl').value.trim();
         if (!urlInput) {
@@ -497,49 +546,53 @@
         extractBtn.disabled = true;
         extractBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Fetching & parsing...';
         document.getElementById('resultsPanel').style.display = 'none';
-        showStatusMessage(`Fetching ${validUrl} ... please wait`, 'warning');
+        showStatusMessage(`🌐 Fetching ${validUrl} ... using intelligent proxy fallback`, 'warning');
 
         try {
-            // MULTI-PROXY APPROACH: primary allorigins, fallback to corsproxy.io if needed
             let htmlContent = null;
             let usedProxy = null;
+            // PROXY CHAIN: AllOrigins (reliable), then CorsProxy, then direct (if same-origin but mostly not needed)
             const proxyEndpoints = [
-                `https://api.allorigins.win/get?url=${encodeURIComponent(validUrl)}`,
-                `https://corsproxy.io/?url=${encodeURIComponent(validUrl)}`
+                { url: `https://api.allorigins.win/get?url=${encodeURIComponent(validUrl)}`, type: 'allorigins' },
+                { url: `https://corsproxy.io/?${encodeURIComponent(validUrl)}`, type: 'corsproxy' },
+                { url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(validUrl)}`, type: 'codetabs' }
             ];
 
             for (let proxy of proxyEndpoints) {
                 try {
-                    const response = await axios.get(proxy, { timeout: 18000 });
-                    if (proxy.includes('allorigins')) {
-                        if (response.data && response.data.contents) {
-                            htmlContent = response.data.contents;
-                            usedProxy = 'allorigins';
-                            break;
-                        }
-                    } else {
-                        if (typeof response.data === 'string') {
-                            htmlContent = response.data;
-                            usedProxy = 'corsproxy';
-                            break;
-                        } else if (response.data && response.data.content) {
-                            htmlContent = response.data.content;
-                            break;
-                        }
+                    console.log(`Trying proxy: ${proxy.url}`);
+                    const response = await axios.get(proxy.url, { timeout: 20000 });
+                    if (proxy.type === 'allorigins' && response.data && response.data.contents) {
+                        htmlContent = response.data.contents;
+                        usedProxy = proxy.type;
+                        break;
+                    } else if (proxy.type === 'corsproxy' && typeof response.data === 'string') {
+                        htmlContent = response.data;
+                        usedProxy = proxy.type;
+                        break;
+                    } else if (proxy.type === 'codetabs' && response.data && typeof response.data === 'string') {
+                        htmlContent = response.data;
+                        usedProxy = proxy.type;
+                        break;
+                    } else if (response.data && response.data.content) {
+                        htmlContent = response.data.content;
+                        usedProxy = proxy.type;
+                        break;
                     }
                 } catch (e) {
-                    console.warn(`Proxy ${proxy} failed`, e);
+                    console.warn(`Proxy ${proxy.type} failed`, e.message);
                     continue;
                 }
             }
 
-            if (!htmlContent) {
-                throw new Error("Could not fetch website content using available proxies. The site might be blocking or unreachable.");
+            if (!htmlContent || htmlContent.length < 50) {
+                throw new Error("Could not fetch website content. The site may be blocking proxies or require JavaScript.");
             }
 
-            // Show raw HTML preview (first ~20000 chars but full in pre)
-            document.getElementById('htmlPreview').innerText = htmlContent.length > 150000 ? htmlContent.substring(0, 150000) + "\n... (truncated for performance)" : htmlContent;
-            
+            // Display truncated HTML preview (first 100k chars for performance)
+            const htmlPreviewText = htmlContent.length > 120000 ? htmlContent.substring(0, 120000) + "\n... (truncated for performance)" : htmlContent;
+            document.getElementById('htmlPreview').innerText = htmlPreviewText;
+
             // Parse HTML into DOM
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlContent, 'text/html');
@@ -551,12 +604,16 @@
                 const href = link.getAttribute('href');
                 if (href) {
                     const abs = toAbsoluteUrl(href, validUrl);
-                    if (abs) cssUrls.push(abs);
+                    if (abs && !cssUrls.includes(abs)) cssUrls.push(abs);
                 }
             });
-            // Additional inline style extraction is not needed for URLs, but we capture embedded style if needed (but main task: list files)
-            // Also capture style tags? not required but we keep as file list.
-            
+            // Additional: @import inside style tags? optionally we could extract but main file list is fine, but we also capture inline style imports via regex? not necessary for URLs. 
+            // However we catch link preload styles
+            doc.querySelectorAll('link[rel="preload"][as="style"]').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href) { let abs = toAbsoluteUrl(href, validUrl); if (abs && !cssUrls.includes(abs)) cssUrls.push(abs); }
+            });
+
             // ---------- Extract JavaScript files ----------
             const jsScripts = doc.querySelectorAll('script[src]');
             let jsUrls = [];
@@ -564,81 +621,54 @@
                 const src = script.getAttribute('src');
                 if (src) {
                     const abs = toAbsoluteUrl(src, validUrl);
-                    if (abs) jsUrls.push(abs);
+                    if (abs && !jsUrls.includes(abs)) jsUrls.push(abs);
                 }
             });
-            
-            // ---------- Extract Media: img, video, audio, source tags ----------
-            const mediaSelectors = ['img[src]', 'video > source[src]', 'audio > source[src]', 'video[src]', 'audio[src]', 'source[src]'];
-            let mediaUrlsSet = new Set();
-            mediaSelectors.forEach(selector => {
-                const elements = doc.querySelectorAll(selector);
-                elements.forEach(el => {
-                    let srcAttr = el.getAttribute('src');
-                    if (!srcAttr && selector.includes('source')) srcAttr = el.getAttribute('src');
-                    if (srcAttr) {
-                        const absMedia = toAbsoluteUrl(srcAttr, validUrl);
-                        if (absMedia && (absMedia.match(/\.(jpg|jpeg|png|gif|webp|svg|mp4|webm|ogg|mp3|wav|m4a)/i) || absMedia.includes('image') || absMedia.includes('media'))) {
-                            mediaUrlsSet.add(absMedia);
-                        } else if (absMedia && (srcAttr.includes('.jpg') || srcAttr.includes('.png') || srcAttr.includes('.mp4'))) {
-                            mediaUrlsSet.add(absMedia);
-                        }
-                    }
-                });
+            // Module scripts
+            doc.querySelectorAll('script[type="module"][src]').forEach(script => {
+                const src = script.getAttribute('src');
+                if (src) { let abs = toAbsoluteUrl(src, validUrl); if (abs && !jsUrls.includes(abs)) jsUrls.push(abs); }
             });
-            // Also check background images in style attribute? optional, improves extraction.
-            const styleAttrElements = doc.querySelectorAll('[style]');
-            styleAttrElements.forEach(el => {
-                const styleVal = el.getAttribute('style');
-                if (styleVal && styleVal.includes('url(')) {
-                    const matches = styleVal.match(/url\(["']?([^"')]+)["']?\)/g);
-                    if (matches) {
-                        matches.forEach(m => {
-                            let bgUrl = m.replace(/url\(["']?/, '').replace(/["']?\)/, '');
-                            const absBg = toAbsoluteUrl(bgUrl, validUrl);
-                            if (absBg && (absBg.match(/\.(jpg|jpeg|png|gif|webp|svg)/i))) mediaUrlsSet.add(absBg);
-                        });
-                    }
-                }
-            });
-            
-            const mediaFiles = Array.from(mediaUrlsSet);
-            
-            // Update badges
+
+            // ---------- Extract Media (enhanced) ----------
+            const mediaFiles = extractEnhancedMedia(doc, validUrl);
+
+            // Update badges & last assets counter
             document.getElementById('htmlFileBadge').innerText = '1';
             document.getElementById('cssCountBadge').innerText = cssUrls.length;
             document.getElementById('jsCountBadge').innerText = jsUrls.length;
             document.getElementById('mediaCountBadge').innerText = mediaFiles.length;
-            document.getElementById('lastAssets').innerText = cssUrls.length + jsUrls.length + mediaFiles.length;
-            
-            // Render CSS list
-            const cssContainer = document.getElementById('cssListContainer');
-            renderAssetList(cssContainer, cssUrls, 'CSS');
-            
-            // Render JS list
-            const jsContainer = document.getElementById('jsListContainer');
-            renderAssetList(jsContainer, jsUrls, 'JS');
-            
-            // Render Media list
-            const mediaContainer = document.getElementById('mediaListContainer');
-            renderAssetList(mediaContainer, mediaFiles, 'Media');
-            
+            const totalAssets = cssUrls.length + jsUrls.length + mediaFiles.length;
+            document.getElementById('lastAssets').innerText = totalAssets;
+
+            // Render asset lists with inline copy buttons
+            renderAssetList(document.getElementById('cssListContainer'), cssUrls, 'CSS');
+            renderAssetList(document.getElementById('jsListContainer'), jsUrls, 'JavaScript');
+            renderAssetList(document.getElementById('mediaListContainer'), mediaFiles, 'Media');
+
             // Show results panel
             document.getElementById('resultsPanel').style.display = 'flex';
-            showStatusMessage(`✅ Extraction complete! Found ${cssUrls.length} CSS, ${jsUrls.length} JS, ${mediaFiles.length} media files.`, 'success');
-            
+            showStatusMessage(`✅ Success! Found ${cssUrls.length} CSS, ${jsUrls.length} JS, ${mediaFiles.length} media assets. Proxy: ${usedProxy || 'hybrid'}`, 'success');
+
             // update success stats
             incrementExtractionStat(true);
+
+            // Attach copy handlers for bulk actions (avoid duplicates using onclick reassign)
+            const copyHtmlBtn = document.getElementById('copyHtmlBtn');
+            const copyAllCssBtn = document.getElementById('copyAllCssBtn');
+            const copyAllJsBtn = document.getElementById('copyAllJsBtn');
+            const copyAllMediaBtn = document.getElementById('copyAllMediaBtn');
             
-            // Attach copy handlers for each section (bulk copy)
-            document.getElementById('copyHtmlBtn').onclick = () => copyToClipboard(document.getElementById('htmlPreview').innerText, "HTML copied to clipboard");
-            document.getElementById('copyAllCssBtn').onclick = () => copyToClipboard(cssUrls.join('\n'), `${cssUrls.length} CSS URLs copied`);
-            document.getElementById('copyAllJsBtn').onclick = () => copyToClipboard(jsUrls.join('\n'), `${jsUrls.length} JS URLs copied`);
-            document.getElementById('copyAllMediaBtn').onclick = () => copyToClipboard(mediaFiles.join('\n'), `${mediaFiles.length} Media URLs copied`);
-            
+            // Remove old listeners by cloning? simpler: replace with new handler
+            copyHtmlBtn.onclick = () => copyToClipboard(document.getElementById('htmlPreview').innerText, "HTML source copied");
+            copyAllCssBtn.onclick = () => copyToClipboard(cssUrls.join('\n'), `${cssUrls.length} CSS URLs copied`);
+            copyAllJsBtn.onclick = () => copyToClipboard(jsUrls.join('\n'), `${jsUrls.length} JS URLs copied`);
+            copyAllMediaBtn.onclick = () => copyToClipboard(mediaFiles.join('\n'), `${mediaFiles.length} Media URLs copied`);
+
         } catch (err) {
             console.error("Extraction critical error", err);
-            showStatusMessage(`Extraction failed: ${err.message || "Network or proxy error"}. Try a different website or check URL.`, 'error');
+            let errorMsg = err.message || "Network or proxy error. Website may be protected or unreachable.";
+            showStatusMessage(`❌ Extraction failed: ${errorMsg}. Try a different URL or check site accessibility.`, 'error');
             incrementExtractionStat(false);
             document.getElementById('resultsPanel').style.display = 'none';
         } finally {
@@ -646,7 +676,7 @@
             extractBtn.innerHTML = '<i class="fas fa-cloud-download-alt"></i> Extract Full Content';
         }
     }
-    
+
     function renderAssetList(container, urlsArray, typeLabel) {
         container.innerHTML = '';
         if (!urlsArray.length) {
@@ -658,50 +688,46 @@
         urlsArray.forEach(url => {
             const card = document.createElement('div');
             card.className = 'media-card';
-            const safeUrl = url.replace(/'/g, "\\'");
+            // escape for safety but keep URL readable
+            const displayUrl = url.length > 90 ? url.substring(0, 87) + '...' : url;
             card.innerHTML = `
-                <div class="media-url"><i class="fas fa-link"></i> ${escapeHtml(url)}</div>
-                <button class="inline-copy" data-copy-url="${escapeHtmlAttr(url)}"><i class="fas fa-copy"></i> Copy URL</button>
+                <div class="media-url"><i class="fas fa-link"></i> ${escapeHtml(displayUrl)}</div>
+                <button class="inline-copy" data-full-url="${escapeHtmlAttr(url)}"><i class="fas fa-copy"></i> Copy URL</button>
             `;
             const copyBtn = card.querySelector('.inline-copy');
+            const fullUrl = copyBtn.getAttribute('data-full-url');
             copyBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                copyToClipboard(url, `${typeLabel} URL copied`);
+                copyToClipboard(fullUrl, `${typeLabel} URL copied`);
             });
             gridDiv.appendChild(card);
         });
         container.appendChild(gridDiv);
     }
-    
-    // simple escape for innerHTML safety
+
+    // safe escape functions
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
         });
     }
     function escapeHtmlAttr(str) {
-        return str.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+        return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
-    
+
     // Initialize event listeners and stats
     document.getElementById('extractBtn').addEventListener('click', extractWebsiteContent);
     document.getElementById('targetUrl').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') extractWebsiteContent();
     });
-    
-    // Initialize stats UI
+
+    // initial stats UI sync
     updateStatsUI();
-    // preload example
-    if(totalExtractions === 0) {
-        // just set defaults
-    }
-    // for demo: ensure last assets field updates after extraction
-    window.extractWebsiteContent = extractWebsiteContent;
+    // Pre-fill last assets to default 0
+    if (totalExtractions === 0) document.getElementById('lastAssets').innerText = '0';
 </script>
 </body>
 </html>
